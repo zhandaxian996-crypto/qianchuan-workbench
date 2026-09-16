@@ -17,10 +17,6 @@
     "node": ">=22.5.0"
   },
   "devDependencies": {
-    "@executeautomation/playwright-mcp-server": "^1.0.12",
-    "@playwright/mcp": "^0.0.79",
-    "@playwright/test": "^1.61.1",
-    "pptxgenjs": "^4.0.1",
     "xlsx": "^0.18.5"
   }
 }
