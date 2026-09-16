@@ -71,6 +71,7 @@
 
     try {
       const result = await V4.apiJson('/api/accounts', 'DELETE', {
+        action: 'delete',
         id,
         confirm: true,
         permanent: true,
