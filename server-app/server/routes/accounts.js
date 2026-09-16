@@ -51,7 +51,7 @@ function isLoopbackRequest(req) {
  * POST /api/accounts
  *   创建账号；兼容旧版本 action=restore 的恢复入口。
  * DELETE /api/accounts
- *   永久删除账号。confirm 必须为 true；同时清理账号注册、Cookie、Profile、接入草稿和可识别的账号运行文件。
+ *   永久删除账号。必须由新 UI 显式传 action=delete + confirm=true；同时清理账号注册、Cookie、Profile、接入草稿和可识别的账号运行文件。
  */
 async function handleAccountDiscover(req, res) {
   if (req.method !== 'POST') return sendJSON(res, { ok: false, error: 'Method Not Allowed', code: 'method_not_allowed' }, 405);
@@ -114,6 +114,9 @@ async function handleAccounts(req, res) {
   try {
     let result;
     if (req.method === 'DELETE') {
+      if (body.action !== 'delete') {
+        return sendJSON(res, { ok: false, error: '请使用新版账号管理界面确认删除', code: 'delete_confirmation_ui_required' }, 409);
+      }
       result = await deleteAccountPermanently({ ...body, confirm: body.confirm === true }, {
         beforeDelete: async id => {
           await evictAccountRuntime(id);
