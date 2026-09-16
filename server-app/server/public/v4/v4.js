@@ -373,14 +373,24 @@
     await new Promise((res, rej) => {
       const s = document.createElement('script');
       s.src = '/v4/pages/' + name + '.js?t=' + Date.now();
-      s.onload = res; s.onerror = rej;
+      s.onload = res;
+      s.onerror = (e) => {
+        console.error('[v4] 脚本网络加载失败:', s.src, e);
+        rej(new Error('网络加载失败'));
+      };
       document.body.appendChild(s);
     }).catch(error => { console.error('[v4] 页面脚本加载失败', name, error); });
     if (my !== mountSeq) return; // await 期间已切到别的页，丢弃不挂载
     const pg = V4.pages[name];
     if (pg && typeof pg.mount === 'function') {
-      current = { name, unmount: pg.mount(view) };
-      scheduleLiquidGlass(view);
+      try {
+        current = { name, unmount: pg.mount(view) };
+        scheduleLiquidGlass(view);
+      } catch (renderError) {
+        console.error('[v4] 页面渲染执行异常:', name, renderError);
+        view.innerHTML = `<div class="wip"><div class="w-t">页面脚本执行异常</div><div class="w-s" style="color:var(--st-danger,#ef4444);font-family:var(--font-data,monospace);">${V4.esc(renderError.message || String(renderError))}</div><button id="retryPage" type="button">重试</button></div>`;
+        view.querySelector('#retryPage').addEventListener('click', mount);
+      }
     } else {
       view.innerHTML = '<div class="wip"><div class="w-t">页面未加载成功</div><div class="w-s">请检查连接后重试</div><button id="retryPage" type="button">重新加载</button> <a href="#/overview">回工作台</a></div>';
       view.querySelector('#retryPage').addEventListener('click', mount);

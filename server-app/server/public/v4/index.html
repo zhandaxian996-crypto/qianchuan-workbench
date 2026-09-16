@@ -34,12 +34,25 @@
 
 <main class="stage" id="view"></main>
 
+<script>
+  window.addEventListener('error', function(event) {
+    console.error('[Global Error Caught]:', event.message, event.filename, event.lineno, event.error);
+    var box = document.getElementById('global-err-box');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'global-err-box';
+      box.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:999999;background:#ef4444;color:#fff;padding:10px 16px;border-radius:8px;font-size:12px;font-family:monospace;box-shadow:0 4px 12px rgba(0,0,0,0.3);max-width:400px;word-break:break-all;';
+      document.body.appendChild(box);
+    }
+    box.innerHTML = '<strong>页面脚本报错:</strong><br>' + (event.message || '未知异常') + '<br><small>' + (event.filename || '') + ':' + (event.lineno || '') + '</small>';
+  });
+</script>
 <script src="/v4/shared.js"></script>
 <script src="/v4/v4.js"></script>
 <script src="/v4/account-ui-fixes.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
-    serviceWorker.register('/sw.js').catch(err => console.log('SW fail:', err));
+    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail:', err));
   }
 </script>
 </body>
