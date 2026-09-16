@@ -1,15 +1,14 @@
-// 账号注册表接口：前端可安全地增删/恢复账号；绝不返回或操作 Cookie 内容。
+// 账号注册表接口：前端可安全地增删/恢复账号；绝不返回 Cookie 内容。
 const { sendJSON, readJsonBody, checkBodyKeys } = require('../lib/utils');
 const { QIANCHUAN_ACCOUNTS, account_config, UI_FEATURES } = require('../lib/config');
 const {
   createAccount,
-  archiveAccount,
   restoreAccount,
-  purgeAccount,
   listArchivedAccounts,
   persistPreflight,
   persistDiscoveredFields,
 } = require('../lib/accountRegistry');
+const { deleteAccountPermanently } = require('../lib/accountDelete');
 const { discoverAccount } = require('../lib/accountDiscovery');
 const { preflightAccount } = require('../lib/accountPreflight');
 const { cancelAccountQueue } = require('../lib/qianchuan');
@@ -46,13 +45,13 @@ function isLoopbackRequest(req) {
 
 /**
  * GET /api/accounts
- *   返回当前可切换的安全账号元数据及已移出账号摘要。
+ *   返回当前可切换的安全账号元数据及历史已移出账号摘要。
  * POST /api/accounts/discover
  *   只接受 Cookie，返回短时内存中的账户候选。
  * POST /api/accounts
- *   只接受 discovery_id + candidate_id 创建；action=restore 恢复已移出账号。
+ *   创建账号；兼容旧版本 action=restore 的恢复入口。
  * DELETE /api/accounts
- *   移出账号。不会删除 Profile、Cookie、SQLite、缓存或历史数据。
+ *   永久删除账号。confirm 必须为 true；同时清理账号注册、Cookie、Profile、接入草稿和可识别的账号运行文件。
  */
 async function handleAccountDiscover(req, res) {
   if (req.method !== 'POST') return sendJSON(res, { ok: false, error: 'Method Not Allowed', code: 'method_not_allowed' }, 405);
@@ -111,25 +110,24 @@ async function handleAccounts(req, res) {
     : ['action', 'discovery_id', 'candidate_id', 'id', 'confirm', 'permanent'];
   const keys = checkBodyKeys(body, allowed, '/api/accounts');
   if (!keys.ok) return sendJSON(res, { ok: false, error: keys.error, code: 'unknown_parameter' }, 400);
+
   try {
     let result;
-    if (body.action === 'purge' || (req.method === 'DELETE' && body.permanent)) {
-      result = await purgeAccount(body, { beforePurge: async id => {
-        await evictAccountRuntime(id);
-        cancelAccountQueue(id);
-      } });
-    } else if (req.method === 'DELETE') {
-      result = await archiveAccount(body, { beforeArchive: async id => {
-        await evictAccountRuntime(id);
-        cancelAccountQueue(id);
-      } });
+    if (req.method === 'DELETE') {
+      result = await deleteAccountPermanently({ ...body, confirm: body.confirm === true }, {
+        beforeDelete: async id => {
+          await evictAccountRuntime(id);
+          cancelAccountQueue(id);
+        },
+      });
     } else if (body.action === 'restore') {
       result = await restoreAccount(body);
     } else if (!body.action || body.action === 'create') {
       result = await createAccount(body);
     } else {
-      return sendJSON(res, { ok: false, error: '账号操作类型无效，仅支持创建、恢复或移出账号', code: 'invalid_action' }, 400);
+      return sendJSON(res, { ok: false, error: '账号操作类型无效，仅支持创建账号或兼容恢复旧账号', code: 'invalid_action' }, 400);
     }
+
     return sendJSON(res, {
       ok: true,
       ...result,
