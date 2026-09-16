@@ -1,0 +1,71 @@
+/* Real generated artwork overrides. SVG assets remain only as a safe fallback. */
+:root.cozy-generated-ready[data-theme="paper"] .cozy-hero,
+:root.cozy-generated-ready[data-theme="paper"] .demo-hero {
+  background-image:
+    linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.92) 37%,rgba(255,255,255,.48) 58%,rgba(255,255,255,.04) 82%),
+    var(--cozy-bitmap-hero-day) !important;
+  background-position:left top,right center!important;
+  background-size:100% 100%,auto 148%!important;
+  background-repeat:no-repeat!important;
+}
+
+:root.cozy-generated-ready:not([data-theme="paper"]) .cozy-hero,
+:root.cozy-generated-ready:not([data-theme="paper"]) .demo-hero {
+  background-image:
+    linear-gradient(90deg,rgba(14,27,47,.98) 0%,rgba(14,27,47,.90) 37%,rgba(14,27,47,.48) 58%,rgba(14,27,47,.04) 82%),
+    var(--cozy-bitmap-hero-night) !important;
+  background-position:left top,right center!important;
+  background-size:100% 100%,auto 148%!important;
+  background-repeat:no-repeat!important;
+}
+
+:root.cozy-generated-ready[data-theme="paper"] .cozy-sidebar::after {
+  background-image:var(--cozy-bitmap-side-day)!important;
+  background-position:center bottom!important;
+  background-size:contain!important;
+  mask-image:linear-gradient(to bottom,transparent 0,#000 9%,#000 92%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 9%,#000 92%,transparent 100%);
+}
+
+:root.cozy-generated-ready:not([data-theme="paper"]) .cozy-sidebar::after {
+  background-image:var(--cozy-bitmap-side-night)!important;
+  background-position:center bottom!important;
+  background-size:contain!important;
+  mask-image:linear-gradient(to bottom,transparent 0,#000 8%,#000 94%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 8%,#000 94%,transparent 100%);
+}
+
+:root.cozy-generated-ready[data-theme="paper"] .cozy-companion,
+:root.cozy-generated-ready[data-theme="paper"] .demo-companion {
+  background-image:
+    linear-gradient(90deg,rgba(255,255,255,.99),rgba(255,255,255,.88) 39%,rgba(255,255,255,.26) 63%,rgba(255,255,255,.02)),
+    var(--cozy-bitmap-bottom-day)!important;
+  background-position:left top,right center!important;
+  background-size:100% 100%,auto 158%!important;
+  background-repeat:no-repeat!important;
+}
+
+:root.cozy-generated-ready:not([data-theme="paper"]) .cozy-companion,
+:root.cozy-generated-ready:not([data-theme="paper"]) .demo-companion {
+  background-image:
+    linear-gradient(90deg,rgba(18,32,54,.99),rgba(18,32,54,.86) 40%,rgba(18,32,54,.24) 64%,rgba(18,32,54,.02)),
+    var(--cozy-bitmap-bottom-night)!important;
+  background-position:left top,right center!important;
+  background-size:100% 100%,auto 158%!important;
+  background-repeat:no-repeat!important;
+}
+
+@media(min-width:1500px){
+  :root.cozy-generated-ready[data-theme="paper"] .cozy-hero,
+  :root.cozy-generated-ready[data-theme="paper"] .demo-hero,
+  :root.cozy-generated-ready:not([data-theme="paper"]) .cozy-hero,
+  :root.cozy-generated-ready:not([data-theme="paper"]) .demo-hero{background-size:100% 100%,auto 156%!important}
+  :root.cozy-generated-ready .cozy-sidebar::after{background-size:258px auto!important}
+}
+
+@media(max-width:720px){
+  :root.cozy-generated-ready .cozy-hero,
+  :root.cozy-generated-ready .demo-hero{background-size:100% 100%,auto 112%!important}
+  :root.cozy-generated-ready .cozy-companion,
+  :root.cozy-generated-ready .demo-companion{background-size:100% 100%,auto 120%!important}
+}
