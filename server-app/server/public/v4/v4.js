@@ -4,7 +4,7 @@
   const $ = V4.$;
 
   V4.pages = V4.pages || {};
-  const ROUTES = ['overview', 'warroom', 'decisions', 'replay', 'system', 'onboarding'];
+  const ROUTES = ['overview', 'warroom', 'decisions', 'replay', 'onboarding'];
   const loaded = {};
   let current = null;   // { name, unmount }
   let mountSeq = 0;     // mount 序号守卫
@@ -238,9 +238,18 @@
     return accounts.map(account => {
       const id = V4.esc(account.id);
       const name = V4.esc(account.name || account.id);
-      const be = account.break_even_roi != null ? `结算净 ROI 保本 ${V4.esc(account.break_even_roi)}` : '保本线未配置';
+      const be = account.break_even_roi != null ? `保本 ${V4.esc(account.break_even_roi)}` : '保本未配';
+      const liveState = acctLive && acctLive[account.id];
+      const cookieExpired = liveState && liveState.cookieExpired;
+      const isLive = liveState && liveState.isLive;
+      const badgeHtml = cookieExpired
+        ? `<span style="display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;background:rgba(239,68,68,0.15);color:#ef4444;margin-left:8px;">Cookie已失效</span>`
+        : (isLive
+          ? `<span style="display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;background:rgba(34,197,94,0.15);color:#22c55e;margin-left:8px;">● 正在开播</span>`
+          : `<span style="display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;background:rgba(148,163,184,0.15);color:var(--ink-3);margin-left:8px;">凭据就绪</span>`);
+
       if (kind === 'active') {
-        return `<div class="acct-manager-row"><div><strong>${name}</strong><span class="num">${id}</span><small>${be}</small></div><button class="acct-row-action danger" type="button" data-account-action="remove" data-account-id="${id}" data-account-name="${name}">移出</button></div>`;
+        return `<div class="acct-manager-row"><div><strong>${name}${badgeHtml}</strong><span class="num">${id}</span><small>${be}</small></div><button class="acct-row-action danger" type="button" data-account-action="remove" data-account-id="${id}" data-account-name="${name}">移出</button></div>`;
       }
       return `<div class="acct-manager-row"><div><strong>${name}</strong><span class="num">${id}</span><small>${be}</small></div><div style="display:flex;gap:6px;"><button class="acct-row-action" type="button" data-account-action="restore" data-account-id="${id}" data-account-name="${name}">恢复</button><button class="acct-row-action danger" type="button" data-account-action="purge" data-account-id="${id}" data-account-name="${name}">彻底删除</button></div></div>`;
     }).join('');
@@ -425,7 +434,83 @@
     if (!V4.ACCTS.length && !V4.accountsError) location.hash = '#/onboarding';
     renderAccts();
     V4.poll(refreshLive, 30000);
+    initQueueIndicator();
     mount();
   })();
+
+  /* ===== 全局悬浮排队指示器 (Floating Queue Indicator) ===== */
+  function initQueueIndicator() {
+    if (document.getElementById('floating-queue-indicator')) return;
+    const box = document.createElement('div');
+    box.id = 'floating-queue-indicator';
+    box.style.cssText = `
+      position:fixed;right:20px;bottom:20px;z-index:9999;
+      background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.1);border-radius:24px;
+      padding:8px 14px;display:flex;align-items:center;gap:10px;
+      color:var(--ink,#f8fafc);font-family:var(--font-data,monospace);font-size:11.5px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.36);transition:all .3s ease;user-select:none;
+    `;
+    box.innerHTML = `
+      <div id="fq-dot" style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;"></div>
+      <div id="fq-text" style="white-space:nowrap;">接口就绪 · 0 排队</div>
+      <div id="fq-prog-wrap" style="display:none;width:80px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+        <div id="fq-prog-bar" style="width:0%;height:100%;background:#38bdf8;transition:width .2s;"></div>
+      </div>
+    `;
+    document.body.appendChild(box);
+
+    let pollTimer = null;
+    let pollInterval = 3000;
+    async function updateQueue() {
+      try {
+        const res = await V4.api('/api/status');
+        const qMap = (res && res.runtime && res.runtime.queue) || (res && res.layers && res.layers.queue) || {};
+        let totalQueue = 0;
+        let isProcessing = false;
+        let currentTask = '';
+        let hasRateLimit = false;
+
+        Object.values(qMap).forEach(q => {
+          if (!q) return;
+          totalQueue += (q.length || 0);
+          if (q.processing) isProcessing = true;
+          if (q.current_task) currentTask = q.current_task;
+          if (q.interval > 4000) hasRateLimit = true;
+        });
+
+        const dot = document.getElementById('fq-dot');
+        const text = document.getElementById('fq-text');
+        const progWrap = document.getElementById('fq-prog-wrap');
+        const progBar = document.getElementById('fq-prog-bar');
+        if (!dot || !text || !progWrap || !progBar) return;
+
+        if (totalQueue > 0 || isProcessing) {
+          pollInterval = 1000;
+          box.style.borderColor = hasRateLimit ? 'rgba(234,179,8,0.4)' : 'rgba(56,189,248,0.4)';
+          dot.style.background = hasRateLimit ? '#eab308' : '#38bdf8';
+          dot.style.boxShadow = hasRateLimit ? '0 0 8px #eab308' : '0 0 8px #38bdf8';
+          progWrap.style.display = 'block';
+          const taskLabel = currentTask ? `[${currentTask.split('/').pop().slice(0, 12)}]` : '请求处理中';
+          text.textContent = hasRateLimit
+            ? `限频降速 · 排队 ${totalQueue} ${taskLabel}`
+            : `数据排队 ${totalQueue} · ${taskLabel}`;
+          progBar.style.width = Math.min(100, Math.max(15, (1 / (totalQueue + 1)) * 100)) + '%';
+        } else {
+          pollInterval = 4000;
+          box.style.borderColor = 'rgba(255,255,255,0.1)';
+          dot.style.background = '#22c55e';
+          dot.style.boxShadow = '0 0 8px #22c55e';
+          progWrap.style.display = 'none';
+          text.textContent = '请求队列空闲 · 0 排队';
+        }
+      } catch (err) {
+        pollInterval = 6000;
+      } finally {
+        pollTimer = setTimeout(updateQueue, pollInterval);
+      }
+    }
+    updateQueue();
+  }
 
 })(window.V4);
