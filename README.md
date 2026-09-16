@@ -18,3 +18,21 @@ Agent 按 `next_questions` 一次只问一个问题，用返回 `revision` 和�
 本包默认 `recommendation_only`，不自动投放。保存后用 `status`、`load_account_profile` 和 `get_live_view` 只读回读。随包 `skills/qianchuan-ops/SKILL.md` 可直接按路径读取，无须全局安装；它和历史资料不授予账户权限。
 
 详细步骤见 [用户引导](docs/用户引导.md)、[盯盘运行说明](docs/盯盘运行.md) 和 [接入契约](docs/agent-contracts/onboarding.md)。禁止操作微信界面；删除只按明确授权移入回收站。
+
+---
+
+## ❤️ 赞助与支持
+
+如果您觉得千川工作台对您的投放数据复盘、只读盯盘或自动化探索有所启发和帮助，欢迎请作者喝杯冰美式 ☕ 您的认可与支持是项目持续优化迭代的最大动力！
+
+<div align="center">
+
+| 微信赞赏 (WeChat Pay) | 支付宝赞助 (Alipay) |
+| :---: | :---: |
+| <img src="docs/assets/wechat-pay.svg" width="180" alt="微信赞赏码"/> | <img src="docs/assets/alipay.svg" width="180" alt="支付宝收款码"/> |
+| 打开微信扫一扫 | 打开支付宝扫一扫 |
+
+</div>
+
+> **声明**：赞助纯属个人自愿行为，用于支持开源维护；赞助不附带任何商业履约或定制承诺。感谢所有支持与共创的小伙伴！
+
