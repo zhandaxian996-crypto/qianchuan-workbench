@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "collection": "千川规则技能的必要证据",
+  "prepared_at": "2026-09-08",
+  "offline_core_available": true,
+  "usage": "excerpt_file相对本清单解析；包内摘录足以支撑已收录核心任务。完整原快照在接收方可选外部资料库，以source_id和original_sha256核对；不依赖作者本机路径。没有摘录的014仅保留版本问题记录，不作为规则依据。",
+  "sources": [
+    {
+      "source_id": "QC-OFFICIAL-002",
+      "title": "净成交出价产品手册.md",
+      "source": "https://bytedance.larkoffice.com/docx/TkJXd0jjLogY9qxgPHBc5eIcnTe",
+      "source_kind": "feishu_docx",
+      "captured_at": "2026-07-22",
+      "original_completeness": "unknown",
+      "original_sha256": "f57203c7cf6e4f9fec480d58fea2d4df791791bfa36c6c1bee1c55b42a5d7ced",
+      "source_updated_at": null,
+      "previous_comparison": {
+        "checked_at": "2026-08-24",
+        "scope": "full",
+        "comparison": "远端将注意事项标题中的3点更正为2点；本地与远端表格实际均为不贪心、不着急两项，未发现需要重蒸馏的规则变化，其余差异主要来自导出格式、图片引用和本地来源说明"
+      },
+      "excerpt_file": "证据摘录/净成交出价要点.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": null,
+      "known_issues": [
+        {
+          "topic": "素材追投净成交目标",
+          "issue": "旧Q&A称素材追加投放尚不能设置净成交ROI；对控成本追投该说法已有特定功能更新，不能覆盖新任务",
+          "use_source": "QC-OFFICIAL-016 第2节；核验当前任务模式"
+        }
+      ],
+      "excerpt_sha256": "1aaecb512ecffebf873f4f616b23992ca9f6c7c4847f369ea9154e01434ddb58"
+    },
+    {
+      "source_id": "QC-OFFICIAL-003",
+      "title": "拿量建议功能介绍.md",
+      "source": "https://support.oceanengine.com/support/content/141233",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-07-22",
+      "original_completeness": "partial",
+      "original_sha256": "b36d8f0906780c068abf4fca28398215662efb64c0704e4de947b68f3c37f72f",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/拿量建议要点.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "当前仅开头两节",
+      "known_issues": [],
+      "excerpt_sha256": "6bf5356da0487932a48d0eb82393ec0eee8f15c1931c312a54b924fed34ec91b"
+    },
+    {
+      "source_id": "QC-OFFICIAL-004",
+      "title": "全域净成交-放量投放产品手册.md",
+      "source": "https://bytedance.larkoffice.com/docx/X2HUdrgchoWtfnxytwDcXd4nnLg",
+      "source_kind": "feishu_docx",
+      "captured_at": "2026-07-22",
+      "original_completeness": "unknown",
+      "original_sha256": "60268acef93c9e24d6ec0f50be2a2a21cc09e6604b4ce17ce9aa0eb8d28a2755",
+      "source_updated_at": null,
+      "previous_comparison": {
+        "checked_at": "2026-08-24",
+        "scope": "full",
+        "comparison": "未发现需要重蒸馏的实质规则文字变化；差异主要来自导出格式、图片引用和本地来源说明"
+      },
+      "excerpt_file": "证据摘录/主计划放量要点.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": null,
+      "known_issues": [
+        {
+          "topic": "内部版本差异",
+          "issue": "前部旧对比表写放量保障有消耗天数≥5，第四节2026-05-18规则表写有效投放天数≥3；引用须明确章节与版本，不能混用"
+        },
+        {
+          "topic": "主计划调价间隔",
+          "issue": "旧对比表笼统写控成本ROI调整≥1小时；直播数值修改与优化目标切换应区分，见015",
+          "use_source": "QC-OFFICIAL-015 第2节"
+        },
+        {
+          "topic": "产品区分",
+          "issue": "本文件为主计划放量，不是指定素材的放量追投；不能相互套用成本保障条件",
+          "use_source": "QC-OFFICIAL-016 第1节"
+        }
+      ],
+      "excerpt_sha256": "110f46e4e3d381f56895562c6d483225fd3dde2c1bd44421b6fed99fd9985f5a"
+    },
+    {
+      "source_id": "QC-OFFICIAL-005",
+      "title": "全域投放数据指标说明.md",
+      "source": "https://support.oceanengine.com/support/content/142504",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-07-22",
+      "original_completeness": "unknown",
+      "original_sha256": "0be96c08ebe4643cb57a7793004acfb26a0d55a3248f8dcdc47793cf5c360084",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/数据指标要点.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": null,
+      "known_issues": [],
+      "excerpt_sha256": "596ebec1eba16671a0d64a7e9038bde9225377bd2cdb321d2e6d86662ea9ca60"
+    },
+    {
+      "source_id": "QC-OFFICIAL-006",
+      "title": "全域投放素材看数攻略.md",
+      "source": "https://support.oceanengine.com/support/content/142688",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-07-22",
+      "original_completeness": "unknown",
+      "original_sha256": "e9dba9ebfada5d3747b31a39e6fc652388f88599121dcaf596ff4e3774d0a961",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/素材看数要点.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": null,
+      "known_issues": [],
+      "excerpt_sha256": "da8fe9f7ea0f489548ff38444d3526948440d189705a4a7dde166b4520a3909b"
+    },
+    {
+      "source_id": "QC-OFFICIAL-007",
+      "title": "全域投放投前投中投后操作-节选.md",
+      "source": "巨量千川帮助中心使用宝典章节",
+      "source_kind": "manual_only",
+      "captured_at": "2026-07-22",
+      "original_completeness": "excerpt",
+      "original_sha256": "a952d2dcd0f0713bb1a6d4c0a6da993e588bebbea7a70152272dd9c8b8050139",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/投放操作建议节选.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": null,
+      "known_issues": [],
+      "excerpt_sha256": "ba216b9876027c0bf4b7b8fc30dfa86ac16cb529725e90e21fa12c766e088460"
+    },
+    {
+      "source_id": "QC-OFFICIAL-008",
+      "title": "全域投放效果评估与排查-节选.md",
+      "source": "巨量千川帮助中心使用宝典/效果评估章节",
+      "source_kind": "manual_only",
+      "captured_at": "2026-07-22",
+      "original_completeness": "excerpt",
+      "original_sha256": "758ba6e891ff528ae7a81fdbb3d4cb5958db6da4a1cf8ea5e15d27b0cf2e48b5",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/历史效果排查节选.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "早期使用宝典节选；报表不含全域、仅智能定向等描述不应泛化为当前产品能力，内测效果与冷启样本是历史场景。需核对具体产品、版本及实时能力；追投定向更新见QC-OFFICIAL-016。",
+      "known_issues": [],
+      "excerpt_sha256": "2091cb618a8543206764b564dc97b3f61134c8d63521b555dc66a95abf57e54d"
+    },
+    {
+      "source_id": "QC-OFFICIAL-009",
+      "title": "素材追投调控产品手册.md",
+      "source": "https://support.oceanengine.com/support/content/145256",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-07-22",
+      "original_completeness": "partial",
+      "original_sha256": "142d67a32ddc931a435d8f140c2680b5ff4ee68ba91f2d71340cc27fe0130d8d",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/追投问答节选.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "当前仅Q&A段，正文主体待补",
+      "known_issues": [],
+      "excerpt_sha256": "60cc513763a033c7e405181ee1e9f57e4bf5af078b19646c6120454a7f0122f6"
+    },
+    {
+      "source_id": "QC-OFFICIAL-011",
+      "title": "有效投放功能说明.md",
+      "source": "https://support.oceanengine.com/support/content/143019",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-07-22",
+      "original_completeness": "unknown",
+      "original_sha256": "d179076072d48e4686494067208d06e5bc1bd9dff48c39484db7071f8c2f8a45",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/有效投放早期要点.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": null,
+      "known_issues": [],
+      "excerpt_sha256": "d71e1be961dbaa1142a3b0e7905e57580dea0f05f8495d054539835e03e90f1d"
+    },
+    {
+      "source_id": "QC-OFFICIAL-012",
+      "title": "直播全域投放GMV最大化逻辑.md",
+      "source": "https://support.oceanengine.com/support/content/140157",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-07-22",
+      "original_completeness": "partial",
+      "original_sha256": "81bc28b2c1c55394cea0e6136f58fc67fd1a531bd31196bb1408de7ad792552b",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/GMV组合逻辑节选.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "当前到第四节标题为止，后续待补",
+      "known_issues": [],
+      "excerpt_sha256": "9df78599bae58ad70da733f65ee0f19b544eec606e09342233ec359f7e74e619"
+    },
+    {
+      "source_id": "QC-OFFICIAL-013",
+      "title": "有效投放功能说明-2026-08-29-用户原文快照.md",
+      "source": "用户从千川官方有效投放规则页面手动复制",
+      "source_kind": "manual_only",
+      "captured_at": "2026-08-29",
+      "original_completeness": "excerpt",
+      "original_sha256": "c916fe998482b91cb32be69f43420ba926dcea2edfe08313947d9458202f752f",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/有效投放用户摘录.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "保留用户当时从官方页面提供的正文内容；只做Markdown排版，未在线核验页面版本",
+      "known_issues": [],
+      "excerpt_sha256": "bcddaa0a18e041d4d23adaaa0a70a230f47bd176d9e93bf84dc43da89542e97e"
+    },
+    {
+      "source_id": "QC-OFFICIAL-015",
+      "title": "全域成本保障规则-2026-09-08核验摘录.md",
+      "source": "https://qianchuan.jinritemai.com/support/content/139336",
+      "source_kind": "official_ui_excerpt",
+      "captured_at": "2026-09-08",
+      "original_completeness": "excerpt",
+      "original_sha256": "350a7e7142e55b2b1e6c4e317094ecf065b1e4a52b36a9274833e428ec9503f8",
+      "source_updated_at": "2026-08-14 16:13:05",
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/全域保障核验摘录.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "只覆盖全域控成本投放成本优化的支付/净成交ROI、控成本素材追投及相关通则；非全文，不含乘方/综合成本等完整保障。引用与结构化转述在文件内区分。",
+      "known_issues": [],
+      "excerpt_sha256": "fd813c32814e9645926a7d24d5d6eb3f96780ddba48f1c9c39a9a7a97f7b4f94"
+    },
+    {
+      "source_id": "QC-OFFICIAL-016",
+      "title": "素材追投产品手册-2026-09-08核验摘录.md",
+      "source": "https://support.oceanengine.com/support/content/145256?spaceId=122",
+      "source_kind": "official_ui_excerpt",
+      "captured_at": "2026-09-08",
+      "original_completeness": "excerpt",
+      "original_sha256": "3dda1eae1bfbbba93234fbb9812ee8d7c259d3e44974c7ba33de47761018b743",
+      "source_updated_at": "2026-08-06 01:52:42",
+      "previous_comparison": null,
+      "excerpt_file": "证据摘录/追投功能核验摘录.md",
+      "excerpt_completeness": "excerpt",
+      "evidence_role": "source_excerpt",
+      "notes": "覆盖追投方式、暂停额度、新旧净成交任务、创建Q&A及成本保障对应段落；按官方已显示内容摘录与重排，非全文。",
+      "known_issues": [],
+      "excerpt_sha256": "7af488c84885521be11368b7378c2217ca9716806fe5c76420081f19746347dd"
+    },
+    {
+      "source_id": "QC-OFFICIAL-014",
+      "title": "巨量千川素材追投及乘方成本保障规则.md",
+      "source": "https://school.jinritemai.com/doudian/web/article/aJq5y67yuWGD",
+      "source_kind": "oceanengine_help",
+      "captured_at": "2026-09-07",
+      "original_completeness": "derived_summary",
+      "original_sha256": "4607371bc2d1f4bffed76c2a005adfbb0ccc0f2a021e02636e4f77c93a894d74",
+      "source_updated_at": null,
+      "previous_comparison": null,
+      "excerpt_file": null,
+      "excerpt_completeness": null,
+      "evidence_role": "historical_derived_note",
+      "notes": "正文为本地整理摘要，不能因标题含官方或原记录标full而视为完整原文；原文件与哈希保留。主计划/素材追投相关已核验条款见QC-OFFICIAL-015与016；乘方独立完整规则尚未由本条提供。",
+      "known_issues": [
+        {
+          "topic": "成交追投触发边界",
+          "issue": "原文写实际成本≥出价×120%，已核验条件为严格大于",
+          "use_source": "QC-OFFICIAL-015 第3节"
+        },
+        {
+          "topic": "操作限制",
+          "issue": "遗漏追投定向与主计划定向单日合计次数条件",
+          "use_source": "QC-OFFICIAL-015 第3节、QC-OFFICIAL-016 第4节"
+        },
+        {
+          "topic": "目标变更计算",
+          "issue": "简化单值公式未说明恒定目标前提；目标变化需按时段累计总出价金额",
+          "use_source": "QC-OFFICIAL-015 第2～3节"
+        },
+        {
+          "topic": "删除影响",
+          "issue": "删除影响平台回传的机制没有充分证据；已满足条件任务删除不影响保障",
+          "use_source": "QC-OFFICIAL-016 第5节"
+        },
+        {
+          "topic": "回传与到账",
+          "issue": "回传周期不是承诺到账日，应区分统计、审核及发放",
+          "use_source": "QC-OFFICIAL-015 第1、4节；QC-OFFICIAL-016 第5节"
+        }
+      ],
+      "excerpt_sha256": null
+    }
+  ]
+}

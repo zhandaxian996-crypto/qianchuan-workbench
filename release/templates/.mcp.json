@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "qianchuan-data-api": {
+      "transport": "stdio",
+      "command": "node",
+      "args": ["server-app/server/mcp/index.js"],
+      "cwd": "."
+    }
+  }
+}

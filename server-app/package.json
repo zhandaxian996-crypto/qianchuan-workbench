@@ -1,0 +1,26 @@
+{
+  "name": "qianchuan-api",
+  "version": "1.4.0",
+  "description": "平台无关的千川数据工作台、可靠性 API 与 MCP 盯盘服务",
+  "main": "server.js",
+  "scripts": {
+    "start": "node scripts/start-workbench.js",
+    "dev": "node scripts/start-workbench.js",
+    "setup": "node scripts/setup-account.js",
+    "check": "node scripts/start-workbench.js --check --json"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "better-sqlite3": "^12.11.1"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "devDependencies": {
+    "@executeautomation/playwright-mcp-server": "^1.0.12",
+    "@playwright/mcp": "^0.0.79",
+    "@playwright/test": "^1.61.1",
+    "pptxgenjs": "^4.0.1",
+    "xlsx": "^0.18.5"
+  }
+}

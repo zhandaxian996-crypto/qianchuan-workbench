@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>千川投放数据工作台</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#050810">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="stylesheet" href="/v4/v4.css">
+</head>
+<body>
+<canvas id="pulse" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="brand">千川数据工作台<span>DATA&nbsp;WORKBENCH</span></div>
+  <nav class="nav" id="nav">
+    <a href="#/overview" data-r="overview">工作台</a>
+    <a href="#/warroom" data-r="warroom">直播场次</a>
+    <a href="#/decisions" data-r="decisions">决策记录</a>
+    <a href="#/replay" data-r="replay">复盘</a>
+    <a href="#/materials" data-r="materials">素材诊断</a>
+    <a href="#/system" data-r="system">设置</a>
+    <a href="#/onboarding" data-r="onboarding">接入与配置</a>
+  </nav>
+  <div class="accts" id="accts"></div>
+  <div class="live" id="live"><i></i><span id="liveT">--</span></div>
+  <div class="top-r">
+    <button class="themeToggle" id="themeToggle" title="切换主题">暗夜主题</button>
+    <span class="upd num" id="upd">--</span>
+    <span class="num" id="clock">--:--:--</span>
+  </div>
+</header>
+
+<main class="stage" id="view"></main>
+
+<script src="/v4/shared.js"></script>
+<script src="/v4/v4.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail:', err));
+  }
+</script>
+</body>
+</html>
