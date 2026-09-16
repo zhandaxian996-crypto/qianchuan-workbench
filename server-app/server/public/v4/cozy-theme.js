@@ -2,12 +2,11 @@
 (function (V4) {
   'use strict';
   let scheduled = false;
-  const iconMap = { overview: '⌂', warroom: '◉', decisions: '☷', replay: '◔', system: '⚙', onboarding: '⌁' };
+  const iconMap = { overview: '⌂', warroom: '◉', decisions: '☷', replay: '◔', onboarding: '⌁' };
   const chipMap = {
     warroom: '直播场次 · 稳住节奏，先看证据',
     decisions: '决策记录 · 看清每一次判断的依据',
     replay: '复盘 · 把经验留给下一场',
-    system: '设置 · 让工作台保持清楚可靠',
     onboarding: '接入与配置 · 简单、安全、凭据只留本机',
   };
 
