@@ -1,0 +1,61 @@
+/* Cozy V5: effect-first pass for local dashboard. */
+:root{--cozy-side-art-size:246px;--cozy-hero-height:176px;--cozy-strip-height:112px;}
+
+/* Hero: give the illustration real presence instead of reading like a background texture. */
+.cozy-hero,.demo-hero{min-height:var(--cozy-hero-height)!important;border-radius:26px!important;overflow:hidden!important;isolation:isolate!important;}
+.cozy-hero::before,.demo-hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(var(--bg-panel-rgb),.98) 0%,rgba(var(--bg-panel-rgb),.91) 38%,rgba(var(--bg-panel-rgb),.37) 60%,rgba(var(--bg-panel-rgb),.03) 82%);}
+:root[data-theme="paper"] .cozy-hero,:root[data-theme="paper"] .demo-hero{background-image:url('/v4/assets/cozy-day.svg')!important;background-position:right 42% bottom 45%!important;background-size:auto 118%!important;background-repeat:no-repeat!important;}
+:root:not([data-theme="paper"]) .cozy-hero,:root:not([data-theme="paper"]) .demo-hero{background-image:url('/v4/assets/cozy-night.svg')!important;background-position:right 42% bottom 48%!important;background-size:auto 122%!important;background-repeat:no-repeat!important;}
+.cozy-hero>*,.demo-hero>*{position:relative;z-index:2;}
+.cozy-hero h1,.demo-hero h1{font-size:34px!important;letter-spacing:-.035em!important;}
+.cozy-hero p,.demo-hero p{font-size:13.5px!important;max-width:620px!important;}
+.demo-scribble{right:25%!important;top:44px!important;}
+
+/* Side illustration: blend the generated composition into the sidebar rather than looking pasted on. */
+.cozy-sidebar::after{height:505px!important;left:-22px!important;right:-18px!important;bottom:36px!important;background-image:url('/v4/assets/cozy-side.svg')!important;background-size:var(--cozy-side-art-size) auto!important;background-position:center bottom!important;opacity:1!important;filter:drop-shadow(0 18px 28px rgba(45,70,100,.08));mask-image:linear-gradient(to bottom,transparent 0,#000 15%,#000 88%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 15%,#000 88%,transparent 100%);}
+.cozy-sidebar::before{content:"";position:absolute;left:18px;right:18px;bottom:16px;height:170px;border-radius:28px;background:radial-gradient(circle at 50% 100%,rgba(126,198,146,.16),transparent 66%);pointer-events:none;}
+.cozy-sidebar .cozy-side-note{padding-bottom:305px!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+
+/* Bottom companion art: wider and more image-led. */
+.cozy-companion,.demo-companion{min-height:var(--cozy-strip-height)!important;padding:22px 30px!important;border-radius:24px!important;background-position:right center!important;background-size:auto 148%!important;background-repeat:no-repeat!important;}
+:root[data-theme="paper"] .cozy-companion,:root[data-theme="paper"] .demo-companion{background-image:linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.80) 43%,rgba(255,255,255,.14) 65%,rgba(255,255,255,.02)),url('/v4/assets/cozy-strip.svg')!important;}
+:root:not([data-theme="paper"]) .cozy-companion,:root:not([data-theme="paper"]) .demo-companion{background-image:linear-gradient(90deg,rgba(19,34,56,.98),rgba(19,34,56,.78) 43%,rgba(19,34,56,.14) 66%,rgba(19,34,56,.02)),url('/v4/assets/cozy-strip.svg')!important;}
+.cozy-companion strong,.demo-companion strong{font-size:19px!important;letter-spacing:-.02em!important;}
+.cozy-companion span,.demo-companion span{font-size:11.5px!important;}
+
+/* Denser, more finished cards. */
+.demo-kpi,.demo-card,.pg-ov-card,.block,.vital,.pg-ov-band{border-color:rgba(145,169,205,.26)!important;}
+:root[data-theme="paper"] .demo-kpi,:root[data-theme="paper"] .demo-card,:root[data-theme="paper"] .pg-ov-card,:root[data-theme="paper"] .block{background:linear-gradient(150deg,rgba(255,255,255,.97),rgba(248,252,255,.88))!important;}
+.demo-kpi:hover,.demo-card:hover,.pg-ov-card:hover{box-shadow:0 16px 34px rgba(60,90,135,.13)!important;}
+.demo-kpi .value{font-size:29px!important;}
+.demo-card-head h2{font-weight:850!important;letter-spacing:-.015em!important;}
+
+/* Night mode gets warmer and softer instead of generic tech blue. */
+:root:not([data-theme="paper"]) body{background:radial-gradient(860px 520px at 84% -8%,rgba(112,147,230,.20),transparent 62%),radial-gradient(520px 380px at 12% 88%,rgba(231,178,98,.08),transparent 68%),linear-gradient(180deg,#0e1a2d,#0a1424 64%,#0a1525)!important;}
+:root:not([data-theme="paper"]) .demo-card,:root:not([data-theme="paper"]) .demo-kpi,:root:not([data-theme="paper"]) .block,:root:not([data-theme="paper"]) .pg-ov-card{background:linear-gradient(145deg,rgba(27,45,72,.95),rgba(16,30,51,.96))!important;border-color:rgba(105,139,189,.22)!important;}
+:root:not([data-theme="paper"]) header.top{box-shadow:0 10px 30px rgba(0,0,0,.20)!important;}
+
+/* Account / top controls: polished pill geometry. */
+.acct-tab,.acct-add,.acct-manage,.themeToggle,.demo-toggle,.live{border-radius:13px!important;}
+.demo-toggle,.themeToggle{padding-left:12px!important;padding-right:12px!important;}
+
+/* Better depth at common 1440-1920 desktop sizes. */
+@media(min-width:1280px){
+  .stage{padding-left:20px!important;padding-right:20px!important;}
+  .demo-dashboard{grid-template-columns:minmax(0,1fr) 342px!important;gap:14px!important;}
+  .demo-side{gap:11px!important;}
+}
+@media(min-width:1500px){
+  :root{--cozy-side-art-size:266px;--cozy-hero-height:190px;--cozy-strip-height:120px;}
+  .cozy-sidebar{width:266px!important;}
+  header.top,.stage{margin-left:266px!important;}
+  .demo-dashboard{grid-template-columns:minmax(0,1fr) 360px!important;}
+}
+@media(max-width:980px){
+  :root{--cozy-hero-height:172px;--cozy-strip-height:104px;}
+  .cozy-hero,.demo-hero{background-size:auto 104%!important;}
+}
+@media(max-width:720px){
+  .cozy-hero h1,.demo-hero h1{font-size:25px!important;}
+  .cozy-companion,.demo-companion{background-size:auto 118%!important;padding:18px!important;}
+}
