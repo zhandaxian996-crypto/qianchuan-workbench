@@ -59,11 +59,14 @@
     const paper = document.documentElement.getAttribute('data-theme') === 'paper';
     const btn = document.getElementById('themeToggle');
     if (btn) {
-      btn.textContent = paper ? '夜间风格' : '日间风格';
-      btn.title = paper ? '切换到夜间风格' : '切换到日间风格';
+      const label = paper ? '夜间风格' : '日间风格';
+      const title = paper ? '切换到夜间风格' : '切换到日间风格';
+      if (btn.textContent !== label) btn.textContent = label;
+      if (btn.title !== title) btn.title = title;
     }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', paper ? '#f5f8fc' : '#0c1728');
+    const color = paper ? '#f5f8fc' : '#0c1728';
+    if (meta && meta.getAttribute('content') !== color) meta.setAttribute('content', color);
   }
 
   function enhanceOverview() {
@@ -108,7 +111,9 @@
   }
 
   function softenLabels() {
-    document.querySelectorAll('.acct-manager header p').forEach(p => { if (!/添加或彻底删除账号/.test(p.textContent || '')) p.textContent = '添加或彻底删除账号'; });
+    document.querySelectorAll('.acct-manager header p').forEach(p => {
+      if (p.textContent !== '添加或彻底删除账号') p.textContent = '添加或彻底删除账号';
+    });
   }
 
   function enhance() {
