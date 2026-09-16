@@ -1,0 +1,55 @@
+/* Cozy V4: stronger hero, integrated sidebar companion, denser finished-product layout. */
+:root{--cozy-v4-side:252px;--cozy-v4-radius:20px;}
+
+/* Sidebar: make the mascot feel built into the shell instead of pasted on. */
+.cozy-sidebar{width:var(--cozy-v4-side)!important;overflow:hidden!important;}
+.cozy-sidebar::before{content:"";position:absolute;left:10px;right:10px;bottom:78px;height:445px;border-radius:28px;background:linear-gradient(180deg,transparent 0%,rgba(var(--bg-panel-rgb),.08) 28%,rgba(var(--bg-panel-rgb),.68) 100%);pointer-events:none;}
+.cozy-sidebar::after{left:2px!important;right:2px!important;bottom:86px!important;height:430px!important;background-size:232px auto!important;background-position:center bottom!important;opacity:.98!important;filter:drop-shadow(0 18px 28px rgba(71,101,145,.12));}
+:root:not([data-theme="paper"]) .cozy-sidebar::after{filter:drop-shadow(0 20px 30px rgba(0,0,0,.30));}
+.cozy-sidebar .cozy-side-note{padding-bottom:272px!important;}
+.cozy-sidebar .cozy-side-note b{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(243,163,126,.14);color:#a86d46!important;}
+:root:not([data-theme="paper"]) .cozy-sidebar .cozy-side-note b{color:#f3b58e!important;background:rgba(243,163,126,.10);}
+
+/* Header hierarchy. */
+header.top{margin-left:var(--cozy-v4-side)!important;min-height:58px!important;padding:10px 20px!important;}
+.stage{margin-left:var(--cozy-v4-side)!important;padding:14px 18px 30px!important;}
+.acct-tabs{gap:6px!important}.acct-tab{padding-left:11px!important;padding-right:11px!important}.acct-tab.on{box-shadow:inset 0 -2px 0 rgba(var(--cozy-blue-rgb),.56),0 5px 12px rgba(var(--cozy-blue-rgb),.06)!important;}
+
+/* Hero: more presence, stronger illustration occupancy. */
+.cozy-hero,.demo-hero{min-height:168px!important;border-radius:24px!important;padding:24px 30px!important;background-position:center right!important;background-size:cover!important;}
+.cozy-hero h1,.demo-hero h1{font-size:34px!important;letter-spacing:-.035em!important;}
+.cozy-hero p,.demo-hero p{font-size:13.5px!important;max-width:610px!important;}
+.cozy-hero-badge,.demo-hero .demo-hero-tag{margin-top:13px!important;}
+:root[data-theme="paper"] .cozy-hero,:root[data-theme="paper"] .demo-hero{background-image:linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.88) 42%,rgba(255,255,255,.34) 64%,rgba(255,255,255,.04) 79%),url('/v4/assets/cozy-day.svg')!important;}
+:root:not([data-theme="paper"]) .cozy-hero,:root:not([data-theme="paper"]) .demo-hero{background-image:linear-gradient(90deg,rgba(15,28,48,.96) 0%,rgba(15,28,48,.88) 42%,rgba(15,28,48,.38) 64%,rgba(15,28,48,.05) 80%),url('/v4/assets/cozy-night.svg')!important;}
+.demo-scribble{right:23%!important;top:46px!important;font-size:11px!important;}
+
+/* KPI cards: closer to the approved polished mock. */
+.demo-kpis{gap:13px!important;}
+.demo-kpi{min-height:124px!important;padding:16px 17px 13px!important;border-radius:20px!important;}
+.demo-kpi .topline{font-size:12.5px!important}.demo-kpi .value{font-size:29px!important}.demo-kpi .delta{font-size:10.5px!important}.demo-kpi svg{width:82px!important;}
+.demo-kpi:hover{box-shadow:0 14px 30px rgba(67,100,150,.12)!important;}
+
+/* Main content density. */
+.demo-dashboard{grid-template-columns:minmax(0,1fr) 334px!important;gap:13px!important;}
+.demo-side{gap:10px!important;}
+.demo-card{border-radius:20px!important;}
+.demo-card-head{padding:14px 15px 9px!important}.demo-card-head h2{font-size:16.5px!important}.demo-trend{min-height:280px!important}.demo-chart-wrap{height:212px!important;}
+.demo-table th,.demo-table td{padding:9px 9px!important;}
+.demo-agent-stats{margin-left:13px!important;margin-right:13px!important;}.demo-agent-ok{margin-left:13px!important;margin-right:13px!important;}
+.demo-feed,.demo-alert-list{padding-left:13px!important;padding-right:13px!important;}
+
+/* Companion strip: make the art larger, text shorter and more integrated. */
+.cozy-companion,.demo-companion{min-height:106px!important;padding:18px 23px!important;border-radius:20px!important;background-position:right bottom!important;background-size:auto 135%!important;}
+.cozy-companion strong,.demo-companion strong{font-size:18px!important;}.cozy-companion span,.demo-companion span{font-size:11px!important;max-width:520px!important;}
+:root:not([data-theme="paper"]) .cozy-companion,:root:not([data-theme="paper"]) .demo-companion{background-image:linear-gradient(90deg,rgba(19,34,56,.97),rgba(19,34,56,.76) 48%,rgba(19,34,56,.08) 74%),url('/v4/assets/cozy-strip.svg')!important;}
+
+/* Account manager / onboarding should match the soft shell. */
+.acct-manager,.onboard .ob-card{border-radius:20px!important;}
+.acct-manager>header{padding-top:17px!important;padding-bottom:13px!important}.acct-manager-content{padding-top:15px!important;}
+.onboard .ob-card{box-shadow:0 12px 30px rgba(64,91,132,.09)!important;}
+
+/* Responsive. */
+@media(max-width:1180px){:root{--cozy-v4-side:216px}.cozy-sidebar::after{background-size:198px auto!important}.demo-dashboard{grid-template-columns:1fr!important}.demo-side{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}.cozy-hero,.demo-hero{min-height:158px!important}}
+@media(max-width:980px){header.top,.stage{margin-left:0!important}.cozy-hero,.demo-hero{min-height:170px!important;background-position:65% bottom!important}.demo-dashboard{grid-template-columns:1fr!important}.demo-kpis{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:720px){.cozy-hero,.demo-hero{min-height:185px!important;padding:21px 18px!important}.cozy-hero h1,.demo-hero h1{font-size:26px!important}.demo-side{display:flex!important}.cozy-companion,.demo-companion{background-size:auto 105%!important;}.demo-kpi .value{font-size:23px!important}}
