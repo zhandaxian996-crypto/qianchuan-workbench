@@ -4,7 +4,7 @@
   const $ = V4.$;
 
   V4.pages = V4.pages || {};
-  const ROUTES = ['overview', 'warroom', 'decisions', 'replay', 'materials', 'system', 'onboarding'];
+  const ROUTES = ['overview', 'warroom', 'decisions', 'replay', 'system', 'onboarding'];
   const loaded = {};
   let current = null;   // { name, unmount }
   let mountSeq = 0;     // mount 序号守卫
