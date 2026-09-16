@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qianchuan-v4-v5';
+const CACHE_NAME = 'qianchuan-v4-v6';
 const ASSETS = [
   '/v4',
   '/v4/v4.css',
@@ -18,7 +18,9 @@ const ASSETS = [
   '/v4/assets/cozy-day.svg',
   '/v4/assets/cozy-night.svg',
   '/v4/assets/cozy-side.svg',
+  '/v4/assets/cozy-side-night.svg',
   '/v4/assets/cozy-strip.svg',
+  '/v4/assets/cozy-strip-night.svg',
   '/icon.png'
 ];
 
