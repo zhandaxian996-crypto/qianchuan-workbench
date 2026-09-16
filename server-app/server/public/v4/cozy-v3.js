@@ -1,4 +1,4 @@
-/* Cozy V3 interactions: tooltip, right-column ordering and demo transition polish. */
+/* Cozy V3 interactions: tooltip, right-column ordering, transitions and no-data guidance. */
 (function () {
   'use strict';
   let scheduled = false;
@@ -74,12 +74,37 @@
     }, { capture: true });
   }
 
+  function routeName() {
+    return (location.hash || '#/overview').replace(/^#\/?/, '') || 'overview';
+  }
+
+  function ensureNoDataState() {
+    const view = document.getElementById('view');
+    const demoButton = document.querySelector('.demo-toggle');
+    if (!view || !demoButton || routeName() !== 'overview') return;
+    const demoOn = demoButton.classList.contains('on');
+    const hasAccounts = !!(window.V4 && Array.isArray(window.V4.ACCTS) && window.V4.ACCTS.length);
+    const existing = view.querySelector('.cozy-empty-state');
+    if (demoOn || hasAccounts) { existing?.remove(); return; }
+    if (view.querySelector('.demo-dashboard')) return;
+    if (!existing) {
+      const empty = document.createElement('section');
+      empty.className = 'cozy-empty-state';
+      empty.innerHTML = `<div class="cozy-empty-visual" aria-hidden="true"></div><div class="cozy-empty-copy"><span class="cozy-empty-eyebrow">当前暂无真实盘面</span><h2>先看看完整工作台，或者接入你的千川账号</h2><p>演示模式只使用本地示例数据，不会连接千川，也不会执行任何投放操作。</p><div class="cozy-empty-actions"><button type="button" data-empty-demo>开启演示模式</button><button type="button" class="secondary" data-empty-onboard>前往接入账号</button></div></div>`;
+      view.innerHTML = '';
+      view.appendChild(empty);
+      empty.querySelector('[data-empty-demo]').onclick = () => document.querySelector('.demo-toggle')?.click();
+      empty.querySelector('[data-empty-onboard]').onclick = () => { location.hash = '#/onboarding'; };
+    }
+  }
+
   function enhance() {
     scheduled = false;
     orderDemoSide();
     enhanceChart();
     softenCopy();
     wireDemoSwitchTransition();
+    setTimeout(ensureNoDataState, 350);
   }
 
   function schedule() {
