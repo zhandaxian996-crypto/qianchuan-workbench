@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="/v4/cozy-v2.css">
 <link rel="stylesheet" href="/v4/cozy-v3.css">
 <link rel="stylesheet" href="/v4/cozy-v4.css">
+<link rel="stylesheet" href="/v4/cozy-v5.css?v=5">
 </head>
 <body>
 <canvas id="pulse" aria-hidden="true"></canvas>
@@ -60,7 +61,7 @@
 <script src="/v4/cozy-v4.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail:', err));
+    navigator.serviceWorker.register('/sw.js?v=5').catch(err => console.log('SW fail:', err));
   }
 </script>
 </body>
