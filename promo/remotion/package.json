@@ -1,0 +1,18 @@
+{
+  "name": "qianchuan-open-source-film",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.ts --no-open",
+    "render": "remotion render src/index.ts QianchuanOpenSource out/qianchuan-open-source-1080p.mp4 --codec=h264 --concurrency=2"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.506",
+    "remotion": "4.0.506",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}
