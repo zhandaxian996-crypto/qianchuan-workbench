@@ -1,0 +1,47 @@
+name: Render Remotion Promo
+
+on:
+  push:
+    branches:
+      - promo-remotion-cloud-render
+    paths:
+      - 'promo/remotion/**'
+      - '.github/workflows/render-remotion-promo.yml'
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: promo/remotion
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: promo/remotion/package.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure Remotion browser
+        run: npx remotion browser ensure
+
+      - name: Render 1080p MP4
+        run: |
+          mkdir -p out
+          npm run render
+
+      - name: Upload video artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qianchuan-remotion-1080p
+          path: promo/remotion/out/qianchuan-open-source-1080p.mp4
+          if-no-files-found: error
+          retention-days: 7
