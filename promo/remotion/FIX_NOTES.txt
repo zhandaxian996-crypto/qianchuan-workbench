@@ -1,0 +1,1 @@
+Cloud render fix: install Noto CJK fonts and replace placeholder workbench image.
