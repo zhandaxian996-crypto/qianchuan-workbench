@@ -41,20 +41,25 @@ jobs:
           ls -lh public/workbench-day.webp
           test "$(stat -c%s public/workbench-day.webp)" -gt 20000
 
+      - name: Apply V4 skill-accurate flow
+        run: node patch-v4.cjs
+
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
       - name: Ensure Remotion browser
         run: npx remotion browser ensure
 
-      - name: Render V3 verification stills
+      - name: Render V4 verification stills
         run: |
           mkdir -p out/checks
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-02s.png --frame=60
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-06s.png --frame=180
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-12s.png --frame=360
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-19s.png --frame=570
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-25s.png --frame=750
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-27s.png --frame=810
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-30s.png --frame=900
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-33s.png --frame=990
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-37s.png --frame=1110
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-44s.png --frame=1320
@@ -66,18 +71,18 @@ jobs:
           mkdir -p out
           npm run render
 
-      - name: Upload V3 verification stills
+      - name: Upload V4 verification stills
         uses: actions/upload-artifact@v4
         with:
-          name: qianchuan-remotion-v3-checks
+          name: qianchuan-remotion-v4-checks
           path: promo/remotion/out/checks/*.png
           if-no-files-found: error
           retention-days: 7
 
-      - name: Upload V3 video artifact
+      - name: Upload V4 video artifact
         uses: actions/upload-artifact@v4
         with:
-          name: qianchuan-remotion-v3-1080p
+          name: qianchuan-remotion-v4-1080p
           path: promo/remotion/out/qianchuan-open-source-1080p.mp4
           if-no-files-found: error
           retention-days: 7
