@@ -42,7 +42,9 @@ jobs:
           test "$(stat -c%s public/workbench-day.webp)" -gt 20000
 
       - name: Apply V4 skill-accurate flow
-        run: node patch-v4.cjs
+        run: |
+          node patch-v4.cjs
+          node patch-v4b.cjs
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -74,7 +76,7 @@ jobs:
       - name: Upload V4 verification stills
         uses: actions/upload-artifact@v4
         with:
-          name: qianchuan-remotion-v4-checks
+          name: qianchuan-remotion-v4b-checks
           path: promo/remotion/out/checks/*.png
           if-no-files-found: error
           retention-days: 7
@@ -82,7 +84,7 @@ jobs:
       - name: Upload V4 video artifact
         uses: actions/upload-artifact@v4
         with:
-          name: qianchuan-remotion-v4-1080p
+          name: qianchuan-remotion-v4b-1080p
           path: promo/remotion/out/qianchuan-open-source-1080p.mp4
           if-no-files-found: error
           retention-days: 7
