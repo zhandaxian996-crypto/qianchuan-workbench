@@ -3,342 +3,543 @@ import {
   AbsoluteFill,
   Easing,
   Img,
-  Sequence,
   interpolate,
+  Sequence,
   spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
 
-const FONT = '"Noto Sans CJK SC", "Noto Sans CJK", sans-serif';
-const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-const C = {
-  bg: '#061224',
-  bg2: '#0B2041',
-  panel: 'rgba(13,34,67,.86)',
-  panel2: 'rgba(255,255,255,.075)',
-  blue: '#55A4FF',
-  cyan: '#63E5FF',
-  pink: '#FF5CB8',
-  purple: '#A47BFF',
-  green: '#5DE2A5',
-  amber: '#FFD36B',
-  white: '#F7FBFF',
-  muted: '#A8BBD7',
-  danger: '#FF718A',
-};
-const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const};
-
-const fade = (f:number,d:number) => interpolate(f,[0,12,d-12,d],[0,1,1,0],clamp);
-
-const Grid = () => {
-  const f = useCurrentFrame();
-  return <AbsoluteFill style={{
-    backgroundImage:'linear-gradient(rgba(99,229,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(99,229,255,.07) 1px,transparent 1px)',
-    backgroundSize:'62px 62px',
-    backgroundPosition:`${interpolate(f,[0,300],[0,80],clamp)}px ${interpolate(f,[0,300],[0,-50],clamp)}px`,
-    opacity:.72,
-  }}/>;
+const clamp = {
+  extrapolateLeft: 'clamp' as const,
+  extrapolateRight: 'clamp' as const,
 };
 
-const Glow = ({x,y,size,color,opacity=.22}:{x:number;y:number;size:number;color:string;opacity?:number}) =>
-  <div style={{position:'absolute',left:x-size/2,top:y-size/2,width:size,height:size,borderRadius:'50%',background:color,filter:'blur(90px)',opacity}}/>;
+const FONT = '"Noto Sans CJK SC","Microsoft YaHei",sans-serif';
+const BG = '#071326';
+const PANEL = '#0D213D';
+const PANEL_2 = '#102A4B';
+const TEXT = '#F6FAFF';
+const MUTED = '#9FB5D3';
+const BLUE = '#58A8FF';
+const CYAN = '#5EE7FF';
+const PINK = '#FF5CA8';
+const PURPLE = '#9B7BFF';
+const GREEN = '#45E0A8';
+const YELLOW = '#FFD866';
+const RED = '#FF6B82';
 
-const Shell:React.FC<React.PropsWithChildren<{duration:number;light?:boolean}>>=({duration,children,light})=>{
-  const f=useCurrentFrame();
-  return <AbsoluteFill style={{
-    fontFamily:FONT,
-    overflow:'hidden',
-    color:light?'#0D2242':C.white,
-    opacity:fade(f,duration),
-    background:light
-      ? 'radial-gradient(circle at 50% 30%,#FFFFFF 0%,#EDF6FF 54%,#DFECFA 100%)'
-      : 'radial-gradient(circle at 50% 28%,#153D73 0%,#091D39 42%,#061224 100%)',
-  }}>{!light&&<Grid/>}{children}</AbsoluteFill>;
+const ease = Easing.bezier(0.16, 1, 0.3, 1);
+
+const FadeScene: React.FC<React.PropsWithChildren<{duration:number; glow?:string}>> = ({duration, glow = BLUE, children}) => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill
+      style={{
+        fontFamily: FONT,
+        color: TEXT,
+        overflow: 'hidden',
+        background:
+          `radial-gradient(circle at 50% 42%, ${glow}22 0%, transparent 34%),` +
+          'radial-gradient(circle at 85% 12%, rgba(94,231,255,.11), transparent 28%),' +
+          'linear-gradient(145deg,#06101F 0%,#071326 48%,#0A1930 100%)',
+        opacity: interpolate(frame, [0, 10, duration - 10, duration], [0, 1, 1, 0], clamp),
+      }}
+    >
+      <Grid />
+      <GlowOrbs />
+      {children}
+    </AbsoluteFill>
+  );
 };
 
-const TopTag=({children}:{children:React.ReactNode})=><div style={{
-  display:'inline-flex',padding:'10px 18px',borderRadius:999,
-  border:'1px solid rgba(99,229,255,.28)',background:'rgba(7,25,49,.56)',
-  color:C.cyan,fontWeight:800,fontSize:18,letterSpacing:3,
-}}>{children}</div>;
-
-const BlockWord=({text,color=C.white,delay=0,size=66}:{text:string;color?:string;delay?:number;size?:number})=>{
-  const f=useCurrentFrame();
-  const s=spring({fps:30,frame:Math.max(0,f-delay),config:{damping:15,stiffness:145,mass:.8}});
-  return <div style={{
-    display:'inline-flex',alignItems:'center',justifyContent:'center',
-    padding:`${Math.round(size*.18)}px ${Math.round(size*.28)}px`,margin:'7px',
-    borderRadius:Math.round(size*.2),fontSize:size,fontWeight:950,lineHeight:1,
-    letterSpacing:-2,color,
-    background:'linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06))',
-    border:'1px solid rgba(255,255,255,.16)',
-    boxShadow:'inset 0 2px rgba(255,255,255,.20),0 14px 0 rgba(2,12,27,.34),0 28px 60px rgba(0,0,0,.22)',
-    scale:s,translate:`0 ${interpolate(s,[0,1],[24,0])}px`,opacity:s,
-  }}>{text}</div>;
+const Grid: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill
+      style={{
+        opacity: 0.19,
+        backgroundImage:
+          'linear-gradient(rgba(121,175,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(121,175,255,.12) 1px,transparent 1px)',
+        backgroundSize: '56px 56px',
+        backgroundPosition: `${interpolate(frame, [0, 300], [0, 84], clamp)}px 0px`,
+      }}
+    />
+  );
 };
 
-const Panel:React.FC<React.PropsWithChildren<{style?:React.CSSProperties;delay?:number}>>=({children,style,delay=0})=>{
-  const f=useCurrentFrame();
-  const p=spring({fps:30,frame:Math.max(0,f-delay),config:{damping:18,stiffness:120}});
-  return <div style={{
-    position:'absolute',borderRadius:26,padding:26,
-    background:C.panel,border:'1px solid rgba(116,196,255,.22)',
-    boxShadow:'0 24px 70px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.10)',
-    opacity:p,scale:interpolate(p,[0,1],[.94,1]),translate:`0 ${interpolate(p,[0,1],[24,0])}px`,
-    ...style,
-  }}>{children}</div>;
+const GlowOrbs: React.FC = () => {
+  const frame = useCurrentFrame();
+  const items = [
+    {x: 86, y: 110, s: 16, c: PINK},
+    {x: 1780, y: 160, s: 13, c: CYAN},
+    {x: 1640, y: 860, s: 19, c: PURPLE},
+    {x: 220, y: 820, s: 14, c: BLUE},
+    {x: 1460, y: 310, s: 10, c: YELLOW},
+    {x: 510, y: 210, s: 10, c: GREEN},
+  ];
+  return <>{items.map((it, i) => (
+    <div
+      key={i}
+      style={{
+        position: 'absolute',
+        left: it.x,
+        top: it.y,
+        width: it.s,
+        height: it.s,
+        borderRadius: 5,
+        background: it.c,
+        boxShadow: `0 0 28px ${it.c}`,
+        opacity: 0.62,
+        translate: `0px ${Math.sin((frame + i * 12) / 22) * 10}px`,
+        rotate: `${interpolate(frame, [0, 300], [0, 38 + i * 5], clamp)}deg`,
+      }}
+    />
+  ))}</>;
 };
 
-const Pill=({text,color=C.blue,delay=0}:{text:string;color?:string;delay?:number})=>{
-  const f=useCurrentFrame();
-  const p=spring({fps:30,frame:Math.max(0,f-delay),config:{damping:18,stiffness:120}});
-  return <div style={{padding:'12px 18px',borderRadius:16,background:'rgba(255,255,255,.08)',border:`1px solid ${color}66`,fontSize:22,fontWeight:800,color,opacity:p,scale:p}}>{text}</div>;
+const Kicker: React.FC<{children:React.ReactNode; color?:string}> = ({children, color = CYAN}) => (
+  <div
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 10,
+      border: '1px solid rgba(255,255,255,.13)',
+      background: 'rgba(255,255,255,.055)',
+      borderRadius: 999,
+      padding: '8px 16px',
+      color,
+      fontSize: 18,
+      fontWeight: 900,
+      letterSpacing: 2,
+      boxShadow: 'inset 0 1px rgba(255,255,255,.08)',
+    }}
+  >
+    {children}
+  </div>
+);
+
+const BlockWord: React.FC<{children:React.ReactNode; color:string; delay?:number; size?:number}> = ({children, color, delay = 0, size = 72}) => {
+  const frame = useCurrentFrame();
+  const p = spring({frame: Math.max(0, frame - delay), fps: 30, config: {damping: 15, stiffness: 120}});
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        margin: '0 8px 12px 0',
+        padding: '7px 15px 10px',
+        borderRadius: 13,
+        background: `linear-gradient(180deg,${color},${color}CC)`,
+        border: '2px solid rgba(255,255,255,.34)',
+        boxShadow: `0 9px 0 ${color}66, 0 18px 42px ${color}22, inset 0 1px 0 rgba(255,255,255,.38)`,
+        color: '#FFFFFF',
+        fontSize: size,
+        fontWeight: 1000,
+        lineHeight: 1,
+        letterSpacing: -2,
+        scale: 0.78 + p * 0.22,
+        translate: `0px ${22 * (1 - p)}px`,
+        opacity: p,
+        textShadow: '0 2px 0 rgba(0,0,0,.14)',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </span>
+  );
 };
 
-const PulseRing=({delay,color=C.cyan,size=180}:{delay:number;color?:string;size?:number})=>{
-  const f=useCurrentFrame();
-  const local=Math.max(0,f-delay);
-  return <div style={{position:'absolute',left:'50%',top:'50%',width:size,height:size,borderRadius:'50%',border:`5px solid ${color}`,
-    translate:'-50% -50%',scale:interpolate(local,[0,22],[.25,1.45],clamp),opacity:interpolate(local,[0,6,22],[0,.85,0],clamp)}}/>;
-};
-
-const DoubleTapScene=()=>{
-  const f=useCurrentFrame();
-  const handIn=spring({fps:30,frame:Math.max(0,f-32),config:{damping:16,stiffness:115}});
-  const titleFade=interpolate(f,[4,18,72,86],[0,1,1,0],clamp);
-  const boom=interpolate(f,[64,76,110],[0,1,0],clamp);
-  return <Shell duration={150}>
-    <Glow x={960} y={540} size={760} color={C.blue} opacity={.18}/><Glow x={960} y={540} size={470} color={C.pink} opacity={.12}/>
-    <div style={{position:'absolute',left:0,right:0,top:160,textAlign:'center',opacity:titleFade}}>
-      <TopTag>一个小互动</TopTag>
-      <div style={{marginTop:28,fontSize:72,fontWeight:950,letterSpacing:-2}}>请在 <span style={{color:C.amber}}>两秒后</span> 双击屏幕</div>
-      <div style={{marginTop:18,fontSize:28,color:C.muted}}>看看你会不会真的点一下</div>
+const GlassCard: React.FC<React.PropsWithChildren<{x?:number; y?:number; w?:number|string; pad?:number; accent?:string; delay?:number; style?:React.CSSProperties}>> = ({x, y, w, pad = 24, accent = BLUE, delay = 0, style, children}) => {
+  const frame = useCurrentFrame();
+  const p = spring({frame: Math.max(0, frame - delay), fps: 30, config: {damping: 18, stiffness: 110}});
+  return (
+    <div
+      style={{
+        position: x == null && y == null ? 'relative' : 'absolute',
+        left: x,
+        top: y,
+        width: w,
+        padding: pad,
+        borderRadius: 24,
+        background: 'linear-gradient(180deg,rgba(16,42,75,.92),rgba(10,28,51,.94))',
+        border: `1px solid ${accent}55`,
+        boxShadow: `0 20px 60px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.06), 0 0 34px ${accent}12`,
+        opacity: p,
+        scale: 0.93 + p * 0.07,
+        translate: `0px ${18 * (1 - p)}px`,
+        ...style,
+      }}
+    >
+      {children}
     </div>
-    <div style={{position:'absolute',left:0,right:0,top:410,textAlign:'center',fontSize:96,fontWeight:950,color:C.cyan,
-      opacity:interpolate(f,[18,28,54,64],[0,1,1,0],clamp)}}>{f<42?'2':'1'}</div>
-    <div style={{position:'absolute',left:720,top:455,width:480,height:350}}>
-      <PulseRing delay={60}/><PulseRing delay={70} color={C.pink} size={220}/>
-      <Img src={staticFile('hand.webp')} style={{position:'absolute',width:300,left:120,top:80,
-        opacity:handIn,scale:interpolate(handIn,[0,1],[.6,1]),
-        translate:`${interpolate(f,[32,60,68,76],['150px 150px','0px 0px','-4px -8px','0px 0px'],clamp)}`,
-      }}/>
-    </div>
-    {[0,1,2,3,4,5,6,7].map(i=><div key={i} style={{position:'absolute',left:960,top:570,width:18+((i%3)*8),height:18+((i%3)*8),borderRadius:7,
-      background:[C.pink,C.cyan,C.amber,C.purple][i%4],
-      translate:`${interpolate(boom,[0,1],[0,Math.cos(i*.79)*(260+i*24)])}px ${interpolate(boom,[0,1],[0,Math.sin(i*.79)*(210+i*16)])}px`,
-      rotate:`${interpolate(boom,[0,1],[0,180+i*35])}deg`,opacity:boom}}/>)}
-    {[0,1,2,3,4].map(i=><Img key={i} src={staticFile('hearts.webp')} style={{position:'absolute',width:95,left:900+i*22,top:520,
-      opacity:boom,scale:interpolate(boom,[0,1],[.45,.95]),
-      translate:`${(i-2)*125}px ${-110-Math.abs(i-2)*60}px`,rotate:`${(i-2)*14}deg`}}/>)}
-    <div style={{position:'absolute',left:0,right:0,bottom:145,textAlign:'center',fontSize:25,color:C.muted,
-      opacity:interpolate(f,[88,108],[0,1],clamp)}}>双击完成，正式开始。</div>
-  </Shell>;
+  );
 };
 
-const LaunchScene=()=>{
-  const f=useCurrentFrame();
-  return <Shell duration={180}>
-    <Glow x={960} y={500} size={900} color={C.blue}/><Glow x={1200} y={550} size={650} color={C.pink} opacity={.10}/>
-    <div style={{position:'absolute',left:150,right:150,top:135,textAlign:'center'}}><TopTag>OPEN SOURCE · DOUYIN LIVE · QIANCHUAN</TopTag></div>
-    <div style={{position:'absolute',left:120,right:120,top:285,textAlign:'center'}}>
-      <BlockWord text="我把我的" delay={12} size={54}/>
-      <BlockWord text="抖音直播" delay={20} color={C.cyan} size={64}/>
-      <BlockWord text="千川 AI 投流系统" delay={30} color={C.pink} size={64}/>
-      <BlockWord text="开源了" delay={44} color={C.amber} size={72}/>
-    </div>
-    <div style={{position:'absolute',left:0,right:0,top:690,textAlign:'center',fontSize:30,color:C.muted,
-      opacity:interpolate(f,[70,96],[0,1],clamp)}}>最开始不是为了做产品，只是想解决我们自己团队的盯盘问题。</div>
-    <div style={{position:'absolute',left:0,right:0,top:775,display:'flex',justifyContent:'center',gap:18}}>
-      <Pill text="本地运行" delay={90}/><Pill text="MCP" delay={98} color={C.cyan}/><Pill text="Decision Memory" delay={106} color={C.amber}/><Pill text="开源" delay={114} color={C.green}/>
-    </div>
-  </Shell>;
-};
+const Chip: React.FC<{children:React.ReactNode; color?:string}> = ({children, color = BLUE}) => (
+  <span
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '9px 14px',
+      borderRadius: 12,
+      background: `${color}17`,
+      border: `1px solid ${color}3B`,
+      color: '#EAF3FF',
+      fontSize: 20,
+      fontWeight: 850,
+      whiteSpace: 'nowrap',
+    }}
+  >
+    {children}
+  </span>
+);
 
-const WhyScene=()=>{
-  const f=useCurrentFrame();
-  return <Shell duration={210}>
-    <Glow x={960} y={520} size={820} color={C.purple} opacity={.15}/>
-    <div style={{position:'absolute',left:0,right:0,top:90,textAlign:'center'}}><TopTag>为什么会有这个系统</TopTag></div>
-    <div style={{position:'absolute',left:0,right:0,top:170,textAlign:'center',fontSize:62,fontWeight:950}}>小团队，<span style={{color:C.pink}}>没有专门的人盯投放</span></div>
-    <Panel delay={28} style={{left:210,top:350,width:410,height:260}}>
-      <div style={{fontSize:24,color:C.cyan,fontWeight:850}}>主播</div><div style={{fontSize:40,fontWeight:950,marginTop:18}}>专注直播内容</div>
-      <div style={{fontSize:24,color:C.muted,marginTop:18,lineHeight:1.55}}>节奏 · 话术 · 互动<br/>需要持续保持状态</div>
-    </Panel>
-    <Panel delay={42} style={{left:755,top:305,width:410,height:350,border:`2px solid ${C.pink}88`}}>
-      <div style={{fontSize:24,color:C.pink,fontWeight:850}}>中控</div><div style={{fontSize:42,fontWeight:950,marginTop:18}}>一个人同时做很多事</div>
-      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:28}}>
-        {['控场','配合主播','看实时数据','盯计划','记变化'].map((t,i)=><Pill key={t} text={t} delay={62+i*7} color={i%2?C.purple:C.blue}/>) }
+const SectionTitle: React.FC<{kicker:string; title:React.ReactNode; sub?:string; color?:string}> = ({kicker, title, sub, color = CYAN}) => (
+  <div style={{position: 'absolute', left: 120, right: 120, top: 62, textAlign: 'center', zIndex: 20}}>
+    <Kicker color={color}>{kicker}</Kicker>
+    <div style={{fontSize: 58, lineHeight: 1.16, fontWeight: 1000, marginTop: 14, letterSpacing: -1.4}}>{title}</div>
+    {sub ? <div style={{fontSize: 24, color: MUTED, marginTop: 12, fontWeight: 650}}>{sub}</div> : null}
+  </div>
+);
+
+const Scene1Hook: React.FC = () => {
+  const frame = useCurrentFrame();
+  const tap1 = interpolate(frame, [47, 54, 59], [1, 0.82, 1], {...clamp, easing: ease});
+  const tap2 = interpolate(frame, [63, 70, 75], [1, 0.82, 1], {...clamp, easing: ease});
+  const handScale = frame < 61 ? tap1 : tap2;
+  const boom = interpolate(frame, [66, 93], [0, 1], {...clamp, easing: ease});
+  const introOut = interpolate(frame, [82, 112], [1, 0], clamp);
+  return (
+    <FadeScene duration={120} glow={PINK}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 112, textAlign: 'center', opacity: introOut}}>
+        <Kicker color={PINK}>一个小互动</Kicker>
+        <div style={{fontSize: 76, fontWeight: 1000, marginTop: 24, letterSpacing: -2}}>
+          请在 <span style={{color: YELLOW}}>两秒后</span> 双击屏幕
+        </div>
+        <div style={{fontSize: 25, color: MUTED, marginTop: 16}}>看看你会不会真的点一下</div>
       </div>
-    </Panel>
-    <Panel delay={54} style={{right:210,top:350,width:410,height:260}}>
-      <div style={{fontSize:24,color:C.amber,fontWeight:850}}>投放</div><div style={{fontSize:40,fontWeight:950,marginTop:18}}>会看 ≠ 会调</div>
-      <div style={{fontSize:24,color:C.muted,marginTop:18,lineHeight:1.55}}>ROI 变化了怎么办？<br/>什么时候该等，什么时候该动？</div>
-    </Panel>
-    <div style={{position:'absolute',left:0,right:0,bottom:145,textAlign:'center',fontSize:42,fontWeight:950,
-      opacity:interpolate(f,[118,148],[0,1],clamp)}}>所以我想，把 <span style={{color:C.green}}>盯盘 + 判断</span> 这件事交给 Agent。</div>
-  </Shell>;
-};
 
-const Node=({x,y,title,sub,color,delay,w=270}:{x:number;y:number;title:string;sub:string;color:string;delay:number;w?:number})=><Panel delay={delay} style={{left:x,top:y,width:w,textAlign:'center',padding:'22px 24px'}}>
-  <div style={{width:58,height:58,borderRadius:18,margin:'0 auto 13px',background:`linear-gradient(135deg,${color},#ffffff22)`,boxShadow:`0 0 35px ${color}66`}}/>
-  <div style={{fontSize:30,fontWeight:950,color}}>{title}</div><div style={{fontSize:19,color:C.muted,marginTop:7}}>{sub}</div>
-</Panel>;
-
-const ArchitectureScene=()=>{
-  const f=useCurrentFrame(); const draw=(d:number)=>interpolate(f,[d,d+28],[1,0],clamp);
-  return <Shell duration={210}>
-    <Glow x={960} y={515} size={980} color={C.blue} opacity={.17}/>
-    <div style={{position:'absolute',left:0,right:0,top:70,textAlign:'center'}}><TopTag>真正的核心</TopTag></div>
-    <div style={{position:'absolute',left:0,right:0,top:138,textAlign:'center',fontSize:58,fontWeight:950}}>不是这个网页，而是 <span style={{color:C.cyan}}>Agent + MCP</span></div>
-    <Node x={825} y={270} title="AI Agent" sub="观察 · 查询 · 判断 · 复盘" color={C.purple} delay={20}/>
-    <Node x={825} y={520} title="MCP" sub="把能力变成可调用工具" color={C.cyan} delay={48}/>
-    <Node x={220} y={750} title="千川" sub="计划 / 消耗 / ROI" color={C.blue} delay={82}/>
-    <Node x={640} y={750} title="罗盘" sub="直播 / 商品 / 订单" color={C.green} delay={90}/>
-    <Node x={1060} y={750} title="本地数据库" sub="历史数据 / 素材 / 脚本" color={C.amber} delay={98}/>
-    <Node x={1480} y={750} title="决策记忆" sub="判断 / 结果 / 回评" color={C.pink} delay={106}/>
-    <svg width="1920" height="1080" style={{position:'absolute',inset:0}}>
-      <path d="M960 455 L960 520" stroke={C.cyan} strokeWidth="5" pathLength="1" strokeDasharray="1" strokeDashoffset={draw(62)}/>
-      <path d="M960 700 C760 720 520 720 355 750" stroke={C.blue} strokeWidth="4" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={draw(110)}/>
-      <path d="M960 700 C860 720 810 720 775 750" stroke={C.green} strokeWidth="4" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={draw(118)}/>
-      <path d="M960 700 C1070 720 1150 720 1195 750" stroke={C.amber} strokeWidth="4" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={draw(126)}/>
-      <path d="M960 700 C1240 720 1480 720 1615 750" stroke={C.pink} strokeWidth="4" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={draw(134)}/>
-    </svg>
-  </Shell>;
-};
-
-const ToolCard=({label,value,color,delay}:{label:string;value:string;color:string;delay:number})=>{
-  const f=useCurrentFrame(); const p=spring({fps:30,frame:Math.max(0,f-delay),config:{damping:18,stiffness:130}});
-  return <div style={{height:86,borderRadius:20,padding:'16px 20px',background:'rgba(255,255,255,.07)',border:`1px solid ${color}55`,opacity:p,translate:`${interpolate(p,[0,1],[40,0])}px 0`}}>
-    <div style={{fontSize:17,color:C.muted,fontWeight:750}}>{label}</div><div style={{fontSize:25,color,fontWeight:900,marginTop:5}}>{value}</div>
-  </div>;
-};
-
-const AgentFlowScene=()=>{
-  const f=useCurrentFrame();
-  const phase=f<105?'query':f<220?'analysis':'decision';
-  return <Shell duration={390}>
-    <Glow x={960} y={530} size={900} color={phase==='decision'?C.green:phase==='analysis'?C.purple:C.blue} opacity={.16}/>
-    <div style={{position:'absolute',left:0,right:0,top:54,textAlign:'center'}}><TopTag>模拟一轮真实的 Agent 工作</TopTag></div>
-    <div style={{position:'absolute',left:240,right:240,top:115,textAlign:'center',fontSize:34,fontWeight:820,lineHeight:1.45,
-      padding:'20px 30px',borderRadius:22,background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.15)'}}>
-      当前直播在线上升，但成交没有同步起量，<span style={{color:C.amber}}>这一波要不要继续放量？</span>
-    </div>
-    <Panel delay={18} style={{left:130,top:320,width:360,height:500,textAlign:'center'}}>
-      <div style={{width:118,height:118,borderRadius:36,margin:'10px auto',background:'linear-gradient(145deg,#EAF6FF,#7EC7FF)',boxShadow:'0 0 55px #55A4FF66',display:'grid',placeItems:'center',fontSize:58,fontWeight:950,color:'#0B2A52'}}>A</div>
-      <div style={{fontSize:38,fontWeight:950,marginTop:22}}>Agent A</div>
-      <div style={{fontSize:22,color:C.muted,marginTop:8}}>正在处理投放判断</div>
-      <div style={{marginTop:34,padding:'12px 18px',borderRadius:16,background:phase==='query'?'#55A4FF22':phase==='analysis'?'#A47BFF22':'#5DE2A522',border:`1px solid ${phase==='query'?C.blue:phase==='analysis'?C.purple:C.green}66`,fontSize:23,fontWeight:900,color:phase==='query'?C.blue:phase==='analysis'?C.purple:C.green}}>{phase==='query'?'查询数据中…':phase==='analysis'?'分析中…':'形成决策'}</div>
-    </Panel>
-    <Panel delay={38} style={{left:560,top:315,width:470,height:510}}>
-      <div style={{fontSize:24,fontWeight:900,color:C.cyan,marginBottom:16}}>MCP 工具调用</div>
-      <div style={{display:'grid',gap:12}}>
-        <ToolCard label="get_live_view" value="读取直播实时数据" color={C.blue} delay={58}/>
-        <ToolCard label="delivery / ROI" value="读取计划消耗与 ROI" color={C.cyan} delay={70}/>
-        <ToolCard label="decision_ledger" value="读取历史决策记录" color={C.pink} delay={82}/>
-        <ToolCard label="local_history" value="查询本地历史数据" color={C.amber} delay={94}/>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 332, textAlign: 'center', opacity: interpolate(frame, [14, 30], [0, 1], clamp)}}>
+        <div style={{fontSize: 44, color: CYAN, fontWeight: 1000}}>{frame < 44 ? '2' : frame < 61 ? '1' : ''}</div>
       </div>
-    </Panel>
-    <Panel delay={118} style={{left:1100,top:315,width:690,height:510,border:`1px solid ${phase==='decision'?C.green:C.purple}66`}}>
-      <div style={{fontSize:25,fontWeight:950,color:phase==='decision'?C.green:C.purple}}>{phase==='decision'?'决策建议':'分析结果'}</div>
-      {phase!=='decision'?<div style={{marginTop:24,display:'grid',gap:17,fontSize:27,lineHeight:1.4}}>
-        {['在线人数上升','成交转化未同步改善','当前 ROI 低于目标线','历史类似时段：盲目加量容易扩大低效消耗'].map((t,i)=><div key={t} style={{opacity:interpolate(f,[135+i*17,154+i*17],[0,1],clamp),display:'flex',gap:14,alignItems:'center'}}><span style={{width:12,height:12,borderRadius:4,background:[C.green,C.danger,C.amber,C.purple][i]}}/><span>{t}</span></div>)}
-      </div>:<div style={{marginTop:24,display:'grid',gap:17,fontSize:28,lineHeight:1.4}}>
-        {['暂不追加预算','保持当前投放节奏','10 分钟后复查','重点关注：转化率 / 停留 / 素材承接'].map((t,i)=><div key={t} style={{opacity:interpolate(f,[235+i*16,252+i*16],[0,1],clamp),display:'flex',gap:14,alignItems:'center'}}><span style={{width:26,height:26,borderRadius:8,display:'grid',placeItems:'center',background:C.green,color:'#052819',fontSize:17,fontWeight:950}}>✓</span><span>{t}</span></div>)}
-      </div>}
-      <div style={{position:'absolute',left:28,right:28,bottom:26,padding:'13px 18px',borderRadius:15,background:'rgba(93,226,165,.12)',border:'1px solid rgba(93,226,165,.40)',fontSize:21,fontWeight:850,color:C.green,
-        opacity:interpolate(f,[300,324],[0,1],clamp)}}>✓ 已写入 Decision Ledger，等待下一次复查</div>
-    </Panel>
-    <svg width="1920" height="1080" style={{position:'absolute',inset:0,pointerEvents:'none'}}>
-      <path d="M490 550 L560 550" stroke={C.cyan} strokeWidth="5"/><path d="M1030 550 L1100 550" stroke={phase==='decision'?C.green:C.purple} strokeWidth="5"/>
-    </svg>
-  </Shell>;
+
+      {[0,1].map((i) => {
+        const start = i === 0 ? 50 : 66;
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: 960 - 95 - i * 10,
+              top: 610 - 95 - i * 10,
+              width: 190 + i * 20,
+              height: 190 + i * 20,
+              borderRadius: '50%',
+              border: `4px solid ${i === 0 ? CYAN : PINK}`,
+              opacity: interpolate(frame, [start, start + 4, start + 24], [0, .9, 0], clamp),
+              scale: interpolate(frame, [start, start + 24], [.38, 1.8], clamp),
+              boxShadow: `0 0 44px ${i === 0 ? CYAN : PINK}55`,
+            }}
+          />
+        );
+      })}
+
+      <div
+        style={{
+          position: 'absolute',
+          left: 820,
+          top: 472,
+          width: 280,
+          height: 280,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 190,
+          filter: 'drop-shadow(0 24px 28px rgba(0,0,0,.34))',
+          opacity: interpolate(frame, [34, 48, 94, 112], [0, 1, 1, 0], clamp),
+          scale: handScale,
+          translate: `0px ${interpolate(frame, [34, 52], [90, 0], {...clamp, easing: ease})}px`,
+        }}
+      >☝️</div>
+
+      <div style={{position: 'absolute', inset: 0, opacity: boom * 0.9, pointerEvents: 'none'}}>
+        {[[-250,-85,52,PINK],[260,-105,38,CYAN],[-360,145,40,YELLOW],[330,180,48,PINK],[-110,250,30,CYAN],[130,255,34,PURPLE]].map((p, i) => (
+          <div key={i} style={{position:'absolute', left:960+p[0] as number, top:560+p[1] as number, fontSize:p[2] as number, color:p[3] as string, opacity:boom, scale:.5+boom*.8, translate:`${(p[0] as number)*boom*.14}px ${(p[1] as number)*boom*.14}px`}}>♥</div>
+        ))}
+      </div>
+
+      <div style={{position: 'absolute', left: 0, right: 0, top: 820, textAlign:'center', fontSize:28, fontWeight:800, color:'#DDE9FA', opacity:interpolate(frame,[78,92,106,118],[0,1,1,0],clamp)}}>
+        真点了？那这个赞我先收下了。
+      </div>
+    </FadeScene>
+  );
 };
 
-const Database=({x,y,delay}:{x:number;y:number;delay:number})=>{
-  const f=useCurrentFrame(); const p=spring({fps:30,frame:Math.max(0,f-delay),config:{damping:18,stiffness:120}});
-  return <div style={{position:'absolute',left:x,top:y,width:340,height:300,opacity:p,scale:p}}>
-    {[0,1,2].map(i=><div key={i} style={{position:'absolute',left:25,top:55+i*70,width:290,height:82,borderRadius:'50%',background:`linear-gradient(180deg,#E9F5FF,${i===1?'#73BAFF':'#A9D8FF'})`,border:'4px solid #67B8FF',boxShadow:'0 12px 30px rgba(0,0,0,.20)'}}/>)}
-    <div style={{position:'absolute',left:25,top:98,width:290,height:140,background:'linear-gradient(90deg,#A7D7FF,#E7F6FF 50%,#72BAFF)',borderLeft:'4px solid #67B8FF',borderRight:'4px solid #67B8FF'}}/>
-    <div style={{position:'absolute',left:0,right:0,bottom:0,textAlign:'center',fontSize:29,fontWeight:950,color:C.amber}}>LOCAL DATA</div>
-  </div>;
+const Scene2Reveal: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <FadeScene duration={150} glow={CYAN}>
+      <Img
+        src={staticFile('elements-atlas.webp')}
+        style={{
+          position:'absolute',
+          right:-90,
+          top:120,
+          width:850,
+          opacity:.13,
+          filter:'blur(.2px) saturate(1.2)',
+          scale:interpolate(frame,[0,150],[1,1.06],clamp),
+        }}
+      />
+      <div style={{position:'absolute', left:0, right:0, top:72, textAlign:'center'}}>
+        <Kicker>OPEN SOURCE · QIANCHUAN · AI AGENT</Kicker>
+      </div>
+      <div style={{position:'absolute', left:155, right:155, top:215, textAlign:'center'}}>
+        <div><BlockWord color={PANEL_2} delay={4} size={50}>我把我的</BlockWord></div>
+        <div style={{marginTop:6}}>
+          <BlockWord color={BLUE} delay={12} size={82}>抖音直播</BlockWord>
+          <BlockWord color={PINK} delay={20} size={82}>千川 AI 投流系统</BlockWord>
+        </div>
+        <div style={{marginTop:10}}><BlockWord color={GREEN} delay={34} size={96}>开源了</BlockWord></div>
+      </div>
+      <div style={{position:'absolute', left:0, right:0, top:770, display:'flex', justifyContent:'center', gap:14, opacity:interpolate(frame,[52,76],[0,1],clamp)}}>
+        <Chip color={BLUE}>本地运行</Chip><Chip color={GREEN}>MCP</Chip><Chip color={PURPLE}>Decision Memory</Chip><Chip color={YELLOW}>Open Source</Chip>
+      </div>
+      <div style={{position:'absolute', left:0, right:0, top:866, textAlign:'center', fontSize:24, color:MUTED, fontWeight:650, opacity:interpolate(frame,[78,102],[0,1],clamp)}}>
+        它最开始不是产品，只是我给自己小团队做的一套工具。
+      </div>
+    </FadeScene>
+  );
 };
 
-const MemoryScene=()=>{
-  const f=useCurrentFrame();
-  return <Shell duration={270}>
-    <Glow x={960} y={530} size={900} color={C.pink} opacity={.12}/>
-    <div style={{position:'absolute',left:0,right:0,top:72,textAlign:'center'}}><TopTag>为什么要把历史留在本地</TopTag></div>
-    <div style={{position:'absolute',left:0,right:0,top:145,textAlign:'center'}}><BlockWord text="AI 可以换" delay={10} size={58}/><BlockWord text="历史决策不能丢" delay={24} color={C.pink} size={64}/></div>
-    <Panel delay={45} style={{left:130,top:430,width:360,height:300,textAlign:'center'}}>
-      <div style={{fontSize:78,fontWeight:950,color:C.blue}}>A</div><div style={{fontSize:34,fontWeight:950}}>Agent A</div><div style={{fontSize:21,color:C.muted,marginTop:12}}>今天做判断</div>
-    </Panel>
-    <Database x={790} y={430} delay={60}/>
-    <Panel delay={120} style={{right:130,top:430,width:360,height:300,textAlign:'center'}}>
-      <div style={{fontSize:78,fontWeight:950,color:C.pink}}>B</div><div style={{fontSize:34,fontWeight:950}}>Agent B</div><div style={{fontSize:21,color:C.muted,marginTop:12}}>以后继续接手</div>
-    </Panel>
-    <svg width="1920" height="1080" style={{position:'absolute',inset:0}}><path d="M490 575 C620 575 710 575 790 575" stroke={C.blue} strokeWidth="5"/><path d="M1130 575 C1260 575 1360 575 1430 575" stroke={C.pink} strokeWidth="5"/></svg>
-    <div style={{position:'absolute',left:610,right:610,top:760,display:'flex',justifyContent:'center',gap:12,flexWrap:'wrap'}}>
-      {['历史决策','历史直播','素材详情','脚本信息','结果回评'].map((t,i)=><Pill key={t} text={t} delay={140+i*8} color={[C.blue,C.cyan,C.green,C.amber,C.pink][i]}/>) }
+const Scene3Pain: React.FC = () => {
+  const frame = useCurrentFrame();
+  const tasks = [
+    {t:'跟主播沟通',x:340,y:390,c:PINK},
+    {t:'盯实时数据',x:1295,y:390,c:CYAN},
+    {t:'看计划状态',x:245,y:615,c:BLUE},
+    {t:'判断要不要调',x:1350,y:615,c:YELLOW},
+    {t:'记下发生了什么',x:800,y:760,c:PURPLE},
+  ];
+  return (
+    <FadeScene duration={210} glow={PURPLE}>
+      <SectionTitle kicker="为什么做它" title={<>小团队，<span style={{color:PINK}}>没有专门的人盯投放</span></>} sub="直播现场只有一个中控，还得同时兼顾主播和数据" color={PINK}/>
+      <GlassCard x={690} y={330} w={540} accent={PURPLE} delay={22} style={{textAlign:'center'}}>
+        <div style={{fontSize:20,color:MUTED,fontWeight:800,letterSpacing:2}}>中控</div>
+        <div style={{fontSize:52,fontWeight:1000,marginTop:10}}>一个人同时做很多事</div>
+        <div style={{display:'flex',justifyContent:'center',gap:10,marginTop:18,flexWrap:'wrap'}}>
+          <Chip color={PINK}>控场</Chip><Chip color={BLUE}>看数据</Chip><Chip color={YELLOW}>盯投放</Chip>
+        </div>
+      </GlassCard>
+      {tasks.map((item,i)=><GlassCard key={item.t} x={item.x} y={item.y} w={310} pad={20} accent={item.c} delay={48+i*10} style={{textAlign:'center'}}><div style={{fontSize:27,fontWeight:950,color:'#F6FAFF'}}>{item.t}</div></GlassCard>)}
+      <div style={{position:'absolute',left:0,right:0,top:885,textAlign:'center',fontSize:42,fontWeight:1000,opacity:interpolate(frame,[115,145],[0,1],clamp)}}>
+        人的精力有限，<span style={{color:RED}}>会看数据 ≠ 会调投放</span>
+      </div>
+      <div style={{position:'absolute',left:0,right:0,top:952,textAlign:'center',fontSize:26,color:MUTED,fontWeight:700,opacity:interpolate(frame,[150,178],[0,1],clamp)}}>
+        所以我想，把“盯盘和判断”交给 Agent。
+      </div>
+    </FadeScene>
+  );
+};
+
+const NodeBox: React.FC<{x:number;y:number;w:number;title:string;sub:string;color:string;delay:number;big?:boolean}> = ({x,y,w,title,sub,color,delay,big}) => (
+  <GlassCard x={x} y={y} w={w} accent={color} delay={delay} style={{textAlign:'center'}}>
+    <div style={{fontSize:big?42:28,fontWeight:1000,color}}>{title}</div>
+    <div style={{fontSize:18,lineHeight:1.45,color:MUTED,marginTop:8}}>{sub}</div>
+  </GlassCard>
+);
+
+const Scene4Core: React.FC = () => {
+  const frame=useCurrentFrame();
+  const dash = interpolate(frame,[70,118],[1,0],clamp);
+  return (
+    <FadeScene duration={210} glow={CYAN}>
+      <SectionTitle kicker="系统真正的核心" title={frame<84 ? <>不是这个网页</> : <>而是给 Agent 用的 <span style={{color:CYAN}}>MCP 工具层</span></>} sub="前端给人看，MCP 给智能体用" />
+      <NodeBox x={760} y={275} w={400} title="AI Agent" sub="观察 · 判断 · 复盘" color={BLUE} delay={22} big/>
+      <NodeBox x={800} y={505} w={320} title="MCP" sub="统一工具入口 · next_step" color={CYAN} delay={50} big/>
+      <NodeBox x={250} y={755} w={280} title="千川" sub="计划 / 消耗 / ROI" color={BLUE} delay={88}/>
+      <NodeBox x={580} y={755} w={280} title="罗盘" sub="直播 / 商品 / 订单" color={GREEN} delay={98}/>
+      <NodeBox x={910} y={755} w={320} title="本地数据库" sub="历史 / 素材 / 复盘" color={YELLOW} delay={108}/>
+      <NodeBox x={1280} y={755} w={320} title="决策记忆" sub="判断 / 结果 / 回评" color={PINK} delay={118}/>
+      <svg width="1920" height="1080" style={{position:'absolute',inset:0,pointerEvents:'none'}}>
+        <path d="M960 445 L960 505" stroke={CYAN} strokeWidth="4" pathLength="1" strokeDasharray="1" strokeDashoffset={dash} />
+        <path d="M885 690 C760 710 560 730 390 755" stroke={BLUE} strokeWidth="3.5" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={dash} />
+        <path d="M930 690 C820 720 780 728 720 755" stroke={GREEN} strokeWidth="3.5" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={dash} />
+        <path d="M990 690 C1050 720 1070 730 1070 755" stroke={YELLOW} strokeWidth="3.5" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={dash} />
+        <path d="M1040 690 C1170 710 1300 730 1440 755" stroke={PINK} strokeWidth="3.5" fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={dash} />
+      </svg>
+    </FadeScene>
+  );
+};
+
+const ToolRow: React.FC<{label:string; sub:string; color:string; active:boolean; done:boolean; delay:number}> = ({label,sub,color,active,done,delay}) => (
+  <GlassCard w="100%" pad={15} accent={active?color:'#4B688F'} delay={delay} style={{marginBottom:12,boxShadow:active?`0 0 28px ${color}28`:'none'}}>
+    <div style={{display:'flex',alignItems:'center',gap:12}}>
+      <div style={{width:16,height:16,borderRadius:'50%',background:done?GREEN:active?color:'#39516F',boxShadow:active?`0 0 18px ${color}`:'none'}} />
+      <div style={{flex:1}}><div style={{fontSize:22,fontWeight:950}}>{label}</div><div style={{fontSize:15,color:MUTED,marginTop:4}}>{sub}</div></div>
+      <div style={{fontSize:18,color:done?GREEN:active?color:MUTED,fontWeight:900}}>{done?'✓':active?'读取中':'等待'}</div>
     </div>
-    <div style={{position:'absolute',left:0,right:0,bottom:100,textAlign:'center',fontSize:30,color:C.muted,opacity:interpolate(f,[170,200],[0,1],clamp)}}>换了新的 Agent，也能直接继承过去的判断和上下文。</div>
-  </Shell>;
+  </GlassCard>
+);
+
+const Bullet: React.FC<{text:string;color:string;delay:number}> = ({text,color,delay}) => {
+  const frame=useCurrentFrame();
+  return <div style={{display:'flex',alignItems:'center',gap:13,fontSize:22,fontWeight:820,margin:'14px 0',opacity:interpolate(frame,[delay,delay+16],[0,1],clamp),translate:`${interpolate(frame,[delay,delay+16],[24,0],clamp)}px 0px`}}><span style={{width:11,height:11,borderRadius:3,background:color,boxShadow:`0 0 15px ${color}`}}/>{text}</div>;
 };
 
-const FrontendScene=()=>{
-  const f=useCurrentFrame();
-  const zoom=interpolate(f,[0,240],[1.04,1.09],clamp);
-  return <Shell duration={240} light>
-    <div style={{position:'absolute',left:0,right:0,top:55,textAlign:'center'}}><TopTag>前端为什么存在</TopTag></div>
-    <div style={{position:'absolute',left:0,right:0,top:120,textAlign:'center',fontSize:60,fontWeight:950,color:'#0D2242'}}>前端不是装饰，<span style={{color:'#267EF2'}}>它是我的验数工具</span></div>
-    <div style={{position:'absolute',left:310,top:270,width:1300,height:675,borderRadius:30,overflow:'hidden',background:'white',border:'1px solid #CFE3F7',boxShadow:'0 34px 85px rgba(34,86,145,.20)'}}>
-      <Img src={staticFile('workbench-day.webp')} style={{width:'100%',height:'100%',objectFit:'cover',scale:zoom}}/>
-      <div style={{position:'absolute',left:0,right:0,top:0,height:80,background:'linear-gradient(180deg,rgba(255,255,255,.48),transparent)'}}/>
-    </div>
-    <Panel delay={54} style={{left:55,top:355,width:230,padding:18,background:'rgba(255,255,255,.92)',color:'#0D2242',border:'1px solid #CFE3F7'}}>
-      <div style={{fontSize:26,fontWeight:950,color:'#267EF2'}}>数据真实吗？</div><div style={{fontSize:19,color:'#607A99',marginTop:8}}>和平台后台一致吗</div>
-    </Panel>
-    <Panel delay={72} style={{left:55,top:570,width:230,padding:18,background:'rgba(255,255,255,.92)',color:'#0D2242',border:'1px solid #CFE3F7'}}>
-      <div style={{fontSize:26,fontWeight:950,color:'#6A53DD'}}>是实时的吗？</div><div style={{fontSize:19,color:'#607A99',marginTop:8}}>有没有延迟</div>
-    </Panel>
-    <Panel delay={90} style={{right:55,top:355,width:230,padding:18,background:'rgba(255,255,255,.92)',color:'#0D2242',border:'1px solid #CFE3F7'}}>
-      <div style={{fontSize:26,fontWeight:950,color:'#00A870'}}>拉取准确吗？</div><div style={{fontSize:19,color:'#607A99',marginTop:8}}>口径和字段对吗</div>
-    </Panel>
-    <Panel delay={108} style={{right:55,top:570,width:230,padding:18,background:'rgba(255,255,255,.92)',color:'#0D2242',border:'1px solid #CFE3F7'}}>
-      <div style={{fontSize:26,fontWeight:950,color:'#E99500'}}>历史好查吗？</div><div style={{fontSize:19,color:'#607A99',marginTop:8}}>直播 / 素材 / 脚本</div>
-    </Panel>
-    <div style={{position:'absolute',left:0,right:0,bottom:45,textAlign:'center',fontSize:25,color:'#607A99',opacity:interpolate(f,[125,150],[0,1],clamp)}}>把千川、罗盘、历史直播和本地数据放到一个地方，也方便我验证数据链路。</div>
-  </Shell>;
+const Scene5Agent: React.FC = () => {
+  const frame=useCurrentFrame();
+  const qIndex = Math.min(3, Math.max(0, Math.floor((frame-55)/28)));
+  const analysis = frame >= 175 && frame < 315;
+  const decision = frame >= 315;
+  return (
+    <FadeScene duration={510} glow={GREEN}>
+      <SectionTitle kicker="模拟一轮真实 Agent 工作" title={<>Agent A：<span style={{color:GREEN}}>先问、再查、再判断</span></>} sub="不是“凭感觉回答”，而是先通过 MCP 拿证据" color={GREEN}/>
+
+      <GlassCard x={255} y={230} w={1410} accent={CYAN} delay={12} style={{textAlign:'center'}}>
+        <div style={{fontSize:17,color:CYAN,fontWeight:950,letterSpacing:2}}>用户问题</div>
+        <div style={{fontSize:31,lineHeight:1.38,fontWeight:950,marginTop:8}}>
+          当前直播在线上升，但成交没有同步起量，这一波要不要继续放量？
+        </div>
+      </GlassCard>
+
+      <GlassCard x={150} y={425} w={340} accent={BLUE} delay={28} style={{textAlign:'center'}}>
+        <div style={{width:86,height:86,borderRadius:24,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'center',fontSize:44,fontWeight:1000,background:'linear-gradient(180deg,#ECF6FF,#A7D6FF)',color:'#0C315B',boxShadow:'0 12px 38px rgba(88,168,255,.28)'}}>A</div>
+        <div style={{fontSize:34,fontWeight:1000,marginTop:14}}>Agent A</div>
+        <div style={{fontSize:18,color:MUTED,marginTop:8}}>正在处理投放判断</div>
+        <div style={{marginTop:18}}><Chip color={frame>60?GREEN:BLUE}>{frame>60?'已连接 MCP':'等待任务'}</Chip></div>
+      </GlassCard>
+
+      <GlassCard x={560} y={425} w={500} accent={CYAN} delay={42}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}><div style={{fontSize:25,fontWeight:1000}}>MCP 工具调用</div><Chip color={CYAN}>Evidence First</Chip></div>
+        <ToolRow label="读取直播实时数据" sub="live_view / freshness" color={CYAN} active={qIndex===0 && frame<175} done={qIndex>0 || frame>=175} delay={52}/>
+        <ToolRow label="读取计划消耗 / ROI" sub="delivery / current state" color={BLUE} active={qIndex===1 && frame<175} done={qIndex>1 || frame>=175} delay={62}/>
+        <ToolRow label="读取历史决策记录" sub="decision_ledger" color={PINK} active={qIndex===2 && frame<175} done={qIndex>2 || frame>=175} delay={72}/>
+        <ToolRow label="查询本地历史数据" sub="local history / DB" color={YELLOW} active={qIndex===3 && frame<175} done={frame>=175} delay={82}/>
+      </GlassCard>
+
+      <GlassCard x={1130} y={425} w={640} accent={analysis?PURPLE:GREEN} delay={88}>
+        {!analysis && !decision ? <>
+          <div style={{fontSize:26,fontWeight:1000,color:CYAN}}>正在拼证据链</div>
+          <div style={{marginTop:28,fontSize:21,lineHeight:1.7,color:MUTED}}>实时状态、计划表现、历史判断和本地历史数据会一起进入这一轮分析。</div>
+          <div style={{marginTop:28,display:'flex',gap:10,flexWrap:'wrap'}}><Chip color={CYAN}>实时</Chip><Chip color={PINK}>历史决策</Chip><Chip color={YELLOW}>本地历史</Chip></div>
+        </> : null}
+        {analysis ? <>
+          <div style={{fontSize:27,fontWeight:1000,color:PURPLE}}>分析结果</div>
+          <Bullet text="当前在线人数上升" color={GREEN} delay={182}/>
+          <Bullet text="成交转化未同步改善" color={RED} delay={200}/>
+          <Bullet text="当前 ROI 低于目标线" color={YELLOW} delay={218}/>
+          <Bullet text="历史类似时段，盲目加量更容易放大低效消耗" color={PINK} delay={236}/>
+        </> : null}
+        {decision ? <>
+          <div style={{fontSize:27,fontWeight:1000,color:GREEN}}>决策建议</div>
+          <Bullet text="暂不追加预算" color={RED} delay={322}/>
+          <Bullet text="保持当前投放节奏" color={GREEN} delay={340}/>
+          <Bullet text="10 分钟后复查" color={BLUE} delay={358}/>
+          <Bullet text="重点看转化率 / 停留 / 素材承接" color={YELLOW} delay={376}/>
+          <div style={{marginTop:28,padding:'15px 18px',borderRadius:15,background:'rgba(69,224,168,.10)',border:'1px solid rgba(69,224,168,.35)',fontSize:19,fontWeight:900,color:'#B9FFE6',opacity:interpolate(frame,[420,442],[0,1],clamp)}}>✓ 已写入 Decision Ledger，等待下一次复查</div>
+        </> : null}
+      </GlassCard>
+
+      <div style={{position:'absolute',left:0,right:0,top:950,textAlign:'center',fontSize:25,color:MUTED,fontWeight:700,opacity:interpolate(frame,[430,455],[0,1],clamp)}}>
+        Agent 的价值不是“说得像”，而是每个判断都能追到数据和历史上下文。
+      </div>
+    </FadeScene>
+  );
 };
 
-const OutroScene=()=>{
-  const f=useCurrentFrame();
-  return <Shell duration={150}>
-    <Glow x={960} y={500} size={860} color={C.blue}/><Glow x={960} y={620} size={540} color={C.pink} opacity={.10}/>
-    <div style={{position:'absolute',left:0,right:0,top:115,textAlign:'center'}}><TopTag>FREE & OPEN SOURCE</TopTag></div>
-    <div style={{position:'absolute',left:0,right:0,top:240,textAlign:'center'}}>
-      <BlockWord text="给自己做" delay={12} size={58}/><BlockWord text="后来决定开源" delay={28} color={C.green} size={68}/>
-    </div>
-    <div style={{position:'absolute',left:0,right:0,top:555,textAlign:'center',fontSize:34,lineHeight:1.65,color:C.muted,
-      opacity:interpolate(f,[52,78],[0,1],clamp)}}>如果你也在研究千川 Agent、MCP，或者自动化投流，<br/>希望这个项目能给你一点参考。</div>
-    <div style={{position:'absolute',left:0,right:0,top:760,textAlign:'center',fontSize:46,fontWeight:950,color:C.white,
-      opacity:interpolate(f,[82,105],[0,1],clamp)}}>qianchuan-workbench</div>
-    <div style={{position:'absolute',left:0,right:0,top:825,textAlign:'center',fontFamily:MONO,fontSize:22,color:C.cyan,
-      opacity:interpolate(f,[96,118],[0,1],clamp)}}>github.com/zhandaxian996-crypto/qianchuan-workbench</div>
-  </Shell>;
+const Packet: React.FC<{fromX:number;toX:number;y:number;start:number;color:string}> = ({fromX,toX,y,start,color}) => {
+  const frame=useCurrentFrame();
+  return <div style={{position:'absolute',left:interpolate(frame,[start,start+42],[fromX,toX],clamp),top:y,width:16,height:16,borderRadius:5,background:color,boxShadow:`0 0 20px ${color}`,opacity:interpolate(frame,[start,start+5,start+37,start+42],[0,1,1,0],clamp)}}/>;
 };
 
-export const QianchuanOpenSource:React.FC=()=>{
-  const {fps}=useVideoConfig();
-  return <AbsoluteFill style={{fontFamily:FONT,background:C.bg}}>
-    <Sequence from={0} durationInFrames={5*fps}><DoubleTapScene/></Sequence>
-    <Sequence from={5*fps} durationInFrames={6*fps}><LaunchScene/></Sequence>
-    <Sequence from={11*fps} durationInFrames={7*fps}><WhyScene/></Sequence>
-    <Sequence from={18*fps} durationInFrames={7*fps}><ArchitectureScene/></Sequence>
-    <Sequence from={25*fps} durationInFrames={13*fps}><AgentFlowScene/></Sequence>
-    <Sequence from={38*fps} durationInFrames={9*fps}><MemoryScene/></Sequence>
-    <Sequence from={47*fps} durationInFrames={8*fps}><FrontendScene/></Sequence>
-    <Sequence from={55*fps} durationInFrames={5*fps}><OutroScene/></Sequence>
-  </AbsoluteFill>;
+const Scene6Memory: React.FC = () => {
+  const frame=useCurrentFrame();
+  return (
+    <FadeScene duration={270} glow={PINK}>
+      <SectionTitle kicker="为什么要有历史记忆" title={<>AI 可以换，<span style={{color:PINK}}>历史决策不能丢</span></>} sub="Agent 不是记忆本体，记忆应该留在本地系统里" color={PINK}/>
+      <NodeBox x={185} y={430} w={330} title="Agent A" sub="今天做判断" color={BLUE} delay={26} big/>
+      <GlassCard x={690} y={360} w={540} accent={YELLOW} delay={52} style={{textAlign:'center'}}>
+        <div style={{fontSize:19,color:YELLOW,fontWeight:950,letterSpacing:2}}>LOCAL MEMORY</div>
+        <div style={{fontSize:48,fontWeight:1000,marginTop:10}}>Decision Ledger + 本地数据库</div>
+        <div style={{display:'flex',justifyContent:'center',gap:10,marginTop:20,flexWrap:'wrap'}}>
+          <Chip color={PINK}>历史决策</Chip><Chip color={BLUE}>历史直播</Chip><Chip color={GREEN}>素材详情</Chip><Chip color={PURPLE}>脚本信息</Chip><Chip color={YELLOW}>创意数据</Chip>
+        </div>
+      </GlassCard>
+      <NodeBox x={1405} y={430} w={330} title="Agent B" sub="以后继续接手" color={PINK} delay={94} big/>
+      {[0,1,2,3].map((i)=><Packet key={`a${i}`} fromX={515} toX={690} y={505+i*35} start={78+i*14} color={[BLUE,CYAN,PINK,YELLOW][i]}/>)}
+      {[0,1,2,3].map((i)=><Packet key={`b${i}`} fromX={1230} toX={1405} y={505+i*35} start={142+i*14} color={[GREEN,PURPLE,CYAN,PINK][i]}/>)}
+      <div style={{position:'absolute',left:0,right:0,top:805,textAlign:'center',fontSize:46,fontWeight:1000,opacity:interpolate(frame,[150,180],[0,1],clamp)}}>换 Agent，<span style={{color:YELLOW}}>不换上下文</span></div>
+      <div style={{position:'absolute',left:0,right:0,top:878,textAlign:'center',fontSize:25,color:MUTED,fontWeight:700,opacity:interpolate(frame,[172,198],[0,1],clamp)}}>历史直播、素材、脚本和每一轮判断，都可以在本地继续查。</div>
+    </FadeScene>
+  );
+};
+
+const Callout: React.FC<{x:number;y:number;title:string;sub:string;color:string;delay:number}> = ({x,y,title,sub,color,delay}) => (
+  <GlassCard x={x} y={y} w={285} pad={18} accent={color} delay={delay}>
+    <div style={{fontSize:24,fontWeight:1000,color}}>{title}</div>
+    <div style={{fontSize:16,color:MUTED,marginTop:6,lineHeight:1.4}}>{sub}</div>
+  </GlassCard>
+);
+
+const Scene7Frontend: React.FC = () => {
+  const frame=useCurrentFrame();
+  const zoom=interpolate(frame,[0,240],[1,1.035],clamp);
+  return (
+    <FadeScene duration={240} glow={BLUE}>
+      <SectionTitle kicker="那为什么还要做前端？" title={frame<90 ? <>第一，自己天天看，当然想让它<span style={{color:CYAN}}>舒服一点</span></> : <>第二，它其实是我的<span style={{color:CYAN}}>验数工具</span></>} sub={frame<90 ? '漂亮不是核心，但长期使用时它真的会影响心情。' : '我需要确认：Agent 拿到的，到底是不是对的。'} />
+      <div style={{position:'absolute',left:360,top:300,width:1200,height:680,borderRadius:30,overflow:'hidden',border:'1px solid rgba(255,255,255,.18)',boxShadow:'0 34px 90px rgba(0,0,0,.34)',background:'#EEF5FF',scale:zoom,opacity:interpolate(frame,[15,35],[0,1],clamp)}}>
+        <Img src={staticFile('workbench-day.webp')} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top'}} />
+        <div style={{position:'absolute',inset:0,boxShadow:'inset 0 0 0 1px rgba(255,255,255,.55)',pointerEvents:'none'}}/>
+      </div>
+      <div style={{position:'absolute',left:0,right:0,top:245,display:'flex',justifyContent:'center',gap:12,opacity:interpolate(frame,[74,100],[0,1],clamp)}}>
+        <Chip color={BLUE}>千川</Chip><Chip color={GREEN}>罗盘</Chip><Chip color={YELLOW}>本地历史库</Chip><Chip color={PINK}>决策记录</Chip>
+      </div>
+      <Callout x={70} y={385} title="数据真实吗？" sub="和平台后台能不能对上" color={BLUE} delay={102}/>
+      <Callout x={85} y={650} title="是实时的吗？" sub="有没有延迟、陈旧缓存" color={CYAN} delay={114}/>
+      <Callout x={1570} y={385} title="口径对吗？" sub="字段和指标有没有错位" color={PINK} delay={126}/>
+      <Callout x={1555} y={650} title="历史好查吗？" sub="复盘时能不能快速筛选" color={YELLOW} delay={138}/>
+    </FadeScene>
+  );
+};
+
+const Scene8Close: React.FC = () => {
+  const frame=useCurrentFrame();
+  return (
+    <FadeScene duration={90} glow={GREEN}>
+      <div style={{position:'absolute',left:0,right:0,top:165,textAlign:'center'}}><Kicker color={GREEN}>FREE & OPEN SOURCE</Kicker></div>
+      <div style={{position:'absolute',left:170,right:170,top:285,textAlign:'center'}}>
+        <div style={{fontSize:72,fontWeight:1000,letterSpacing:-2}}>给自己做，<span style={{color:GREEN}}>后来决定开源</span></div>
+        <div style={{fontSize:34,color:MUTED,fontWeight:800,marginTop:24}}>抖音直播千川 AI 投流系统</div>
+      </div>
+      <GlassCard x={430} y={565} w={1060} accent={GREEN} delay={18} style={{textAlign:'center'}}>
+        <div style={{fontSize:18,color:MUTED,fontWeight:900,letterSpacing:2}}>GITHUB SEARCH</div>
+        <div style={{fontSize:48,fontWeight:1000,marginTop:10,color:'#EFFFF8'}}>qianchuan-workbench</div>
+      </GlassCard>
+      <div style={{position:'absolute',left:0,right:0,top:785,display:'flex',justifyContent:'center',gap:12,opacity:interpolate(frame,[28,52],[0,1],clamp)}}>
+        <Chip color={BLUE}>Agent</Chip><Chip color={CYAN}>MCP</Chip><Chip color={YELLOW}>Local Data</Chip><Chip color={PINK}>Decision Memory</Chip>
+      </div>
+      <div style={{position:'absolute',left:0,right:0,top:910,textAlign:'center',fontSize:24,color:MUTED,fontWeight:700,opacity:interpolate(frame,[42,62],[0,1],clamp)}}>
+        如果你也在折腾 Agent、MCP 或千川自动化，希望它能给你一点参考。
+      </div>
+    </FadeScene>
+  );
+};
+
+export const QianchuanOpenSource: React.FC = () => {
+  const {fps} = useVideoConfig();
+  return (
+    <AbsoluteFill style={{backgroundColor:BG}}>
+      <Sequence from={0} durationInFrames={4*fps}><Scene1Hook/></Sequence>
+      <Sequence from={4*fps} durationInFrames={5*fps}><Scene2Reveal/></Sequence>
+      <Sequence from={9*fps} durationInFrames={7*fps}><Scene3Pain/></Sequence>
+      <Sequence from={16*fps} durationInFrames={7*fps}><Scene4Core/></Sequence>
+      <Sequence from={23*fps} durationInFrames={17*fps}><Scene5Agent/></Sequence>
+      <Sequence from={40*fps} durationInFrames={9*fps}><Scene6Memory/></Sequence>
+      <Sequence from={49*fps} durationInFrames={8*fps}><Scene7Frontend/></Sequence>
+      <Sequence from={57*fps} durationInFrames={3*fps}><Scene8Close/></Sequence>
+    </AbsoluteFill>
+  );
 };
