@@ -41,6 +41,9 @@ jobs:
           ls -lh public/workbench-day.webp
           test "$(stat -c%s public/workbench-day.webp)" -gt 20000
 
+      - name: Apply V2 visual fixes
+        run: node fix-v2.cjs
+
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
@@ -51,9 +54,14 @@ jobs:
         run: |
           mkdir -p out/checks
           npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-02s.png --frame=60
-          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-12s.png --frame=360
-          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-28s.png --frame=840
-          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-48s.png --frame=1440
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-07s.png --frame=210
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-15s.png --frame=450
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-22s.png --frame=660
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-35s.png --frame=1050
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-37s.png --frame=1110
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-43s.png --frame=1290
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-51s.png --frame=1530
+          npx remotion still src/index.ts QianchuanOpenSource out/checks/frame-57s.png --frame=1710
 
       - name: Render 1080p MP4
         run: |
@@ -63,7 +71,7 @@ jobs:
       - name: Upload verification stills
         uses: actions/upload-artifact@v4
         with:
-          name: qianchuan-remotion-checks
+          name: qianchuan-remotion-v2-checks
           path: promo/remotion/out/checks/*.png
           if-no-files-found: error
           retention-days: 7
@@ -71,7 +79,7 @@ jobs:
       - name: Upload video artifact
         uses: actions/upload-artifact@v4
         with:
-          name: qianchuan-remotion-1080p-fixed
+          name: qianchuan-remotion-v2-1080p
           path: promo/remotion/out/qianchuan-open-source-1080p.mp4
           if-no-files-found: error
           retention-days: 7
