@@ -32,13 +32,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
           fc-cache -f
-          fc-match 'Noto Sans CJK SC' || true
+          fc-match 'Noto Sans CJK SC'
 
       - name: Restore real workbench screenshot
         run: |
-          base64 --decode public/workbench-day.webp.b64 > public/workbench-day.webp
+          cat public/wb-part-*.txt | tr -d '\r\n' | base64 --decode > public/workbench-day.webp
           file public/workbench-day.webp
           ls -lh public/workbench-day.webp
+          test "$(stat -c%s public/workbench-day.webp)" -gt 20000
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
