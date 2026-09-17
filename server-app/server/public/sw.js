@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qianchuan-v4-v10';
+const CACHE_NAME = 'qianchuan-v4-v11';
 const ASSETS = [
   '/v4',
   '/v4/v4.css',
@@ -10,14 +10,16 @@ const ASSETS = [
   '/v4/cozy-v2.css',
   '/v4/cozy-v3.css',
   '/v4/cozy-v4.css',
-  '/v4/cozy-v5.css?v=10',
-  '/v4/cozy-v6.css?v=10',
-  '/v4/cozy-generated-assets.css?v=10',
+  '/v4/cozy-v5.css?v=11',
+  '/v4/cozy-v6.css?v=11',
+  '/v4/cozy-generated-assets.css?v=11',
+  '/v4/cozy-cosmic.css?v=11',
   '/v4/cozy-theme.js',
   '/v4/demo-mode.js',
   '/v4/cozy-v3.js',
   '/v4/cozy-v4.js',
-  '/v4/cozy-generated-assets.js?v=10',
+  '/v4/cozy-generated-assets.js?v=11',
+  '/v4/cozy-cosmic.js?v=11',
   '/v4/demo-startup-guard.js',
   '/v4/assets/generated/atlas-part-00.txt',
   '/v4/assets/generated/atlas-part-01.txt',
