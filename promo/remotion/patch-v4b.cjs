@@ -1,0 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+const file = path.join(__dirname, 'src', 'Video.tsx');
+let src = fs.readFileSync(file, 'utf8');
+const oldText = `<div style={{marginTop:20,fontSize:18,color:MUTED,fontWeight:700}}>已确认：目标线、停止条件、动作边界。现在才进入数据读取。</div>`;
+const newText = `<div style={{marginTop:20,fontSize:18,color:MUTED,fontWeight:700}}>{frame < 98 ? '等待用户确认后，再进入数据读取。' : '已确认：目标线、停止条件、动作边界。现在才进入数据读取。'}</div>`;
+if (!src.includes(oldText)) throw new Error('V4 confirmation copy target not found');
+src = src.replace(oldText, newText);
+fs.writeFileSync(file, src, 'utf8');
+console.log('Applied V4b confirmation timing fix.');
