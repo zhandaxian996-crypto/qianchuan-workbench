@@ -1,0 +1,1 @@
+workbench-day.webp is the actual raster screenshot used by the Remotion promo render.
